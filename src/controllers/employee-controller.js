@@ -43,7 +43,13 @@ const getEmployee = (req, res) => {
 	res.send('Hola mundo');
 };
 
-const getAllEmployees = (req, res) => {};
+const getAllEmployees = async (req, res) => {
+	const results = await prisma.employee.findMany({
+		include: { person: true },
+	});
+	res.json(results);
+	console.log(results);
+};
 
 const updateEmployee = (req, res) => {};
 
