@@ -38,29 +38,29 @@ const createEmployee = async (req = request, res = response) => {
 };
 
 const getEmployee = async (req = request, res = response) => {
-	const id = req.params.id;
+	const document = req.params.doc;
 	const result = await prisma.employee.findFirst({
 		where: {
 			person: {
-				document: id,
+				document,
 			},
 		},
 		select: {
 			id: true,
 			position: true,
 			state: true,
-			person:{
-				select:{
-					id:true,
-					name:true,
-					lastName:true,
-					typeDocument:true,
-					document:true,
-					genre:true,
-					birthdate:true,
-					phoneNumber:true,
-					email:true,
-					bloodType:true
+			person: {
+				select: {
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
 				},
 			},
 			role: {
@@ -80,7 +80,38 @@ const getEmployee = async (req = request, res = response) => {
 
 const getAllEmployees = async (req = request, res = response) => {
 	const results = await prisma.employee.findMany({
-		include: { person: true },
+		where: {
+			state: 'A',
+		},
+		select: {
+			id: true,
+			position: true,
+			state: true,
+			person: {
+				select: {
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
+				},
+			},
+			role: {
+				select: {
+					name: true,
+				},
+			},
+			hotel: {
+				select: {
+					name: true,
+				},
+			},
+		},
 	});
 	res.json(results);
 	console.log(results);
@@ -88,7 +119,29 @@ const getAllEmployees = async (req = request, res = response) => {
 
 const updateEmployee = (req = request, res = response) => {};
 
-const deleteEmployee = (req = request, res = response) => {};
+const deleteEmployee = async (req = request, res = response) => {
+	const document = req.params.doc;
+	const employee = await prisma.employee.findFirst({
+		where: {
+			person: {
+				document,
+			},
+		},
+	});
+
+	const { id } = employee;
+
+	const result = await prisma.employee.update({
+		where: { id },
+		data: {
+			state: 'D',
+		},
+	});
+	res.json({
+		msg: 'Employee delete sucessfull!',
+		result,
+	});
+};
 
 module.exports = {
 	createEmployee,
