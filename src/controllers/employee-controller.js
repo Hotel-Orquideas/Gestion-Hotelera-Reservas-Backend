@@ -22,9 +22,7 @@ const createEmployee = async (req = request, res = response) => {
 				},
 			},
 			role: {
-				create: {
-					name: 'Employee',
-				},
+				connect: { id: 2 },
 			},
 			hotel: {
 				connect: { id: 1 },
@@ -39,11 +37,48 @@ const createEmployee = async (req = request, res = response) => {
 	console.log(result);
 };
 
-const getEmployee = (req, res) => {
-	res.send('Hola mundo');
+const getEmployee = async (req = request, res = response) => {
+	const id = req.params.id;
+	const result = await prisma.employee.findFirst({
+		where: {
+			person: {
+				document: id,
+			},
+		},
+		select: {
+			id: true,
+			position: true,
+			state: true,
+			person:{
+				select:{
+					id:true,
+					name:true,
+					lastName:true,
+					typeDocument:true,
+					document:true,
+					genre:true,
+					birthdate:true,
+					phoneNumber:true,
+					email:true,
+					bloodType:true
+				},
+			},
+			role: {
+				select: {
+					name: true,
+				},
+			},
+			hotel: {
+				select: {
+					name: true,
+				},
+			},
+		},
+	});
+	res.json(result);
 };
 
-const getAllEmployees = async (req, res) => {
+const getAllEmployees = async (req = request, res = response) => {
 	const results = await prisma.employee.findMany({
 		include: { person: true },
 	});
@@ -51,9 +86,9 @@ const getAllEmployees = async (req, res) => {
 	console.log(results);
 };
 
-const updateEmployee = (req, res) => {};
+const updateEmployee = (req = request, res = response) => {};
 
-const deleteEmployee = (req, res) => {};
+const deleteEmployee = (req = request, res = response) => {};
 
 module.exports = {
 	createEmployee,

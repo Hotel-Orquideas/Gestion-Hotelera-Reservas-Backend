@@ -46,15 +46,16 @@ model Person {
 }
 
 model Employee {
-  id         Int         @id @default(autoincrement())
-  position   String      @db.VarChar(50)
-  person     Person      @relation(fields: [personId], references: [id])
-  personId   Int         @map("person_id")
+  id         Int           @id @default(autoincrement())
+  position   String        @db.VarChar(50)
+  state      StateEmployee @default(A)
+  person     Person        @relation(fields: [personId], references: [id])
+  personId   Int           @map("person_id")
   credential Credential?
-  role       Role        @relation(fields: [roleId], references: [id])
-  roleId     Int         @unique @map("role_id")
-  hotel      Hotel       @relation(fields: [hotelId], references: [id])
-  hotelId    Int         @map("hotel_id")
+  role       Role          @relation(fields: [roleId], references: [id])
+  roleId     Int           @map("role_id")
+  hotel      Hotel         @relation(fields: [hotelId], references: [id])
+  hotelId    Int           @map("hotel_id")
 
   @@map("Employees")
 }
@@ -70,9 +71,9 @@ model Credential {
 }
 
 model Role {
-  id       Int       @id @default(autoincrement())
-  name     String    @db.VarChar(50)
-  employee Employee?
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(50)
+  employee Employee[]
 
   @@map("Roles")
 }
@@ -283,4 +284,10 @@ enum StateBooking {
   C // Confirm
 
   @@map("State_bookings")
+}
+
+enum StateEmployee {
+  A //Active - activo
+  B //Block - bloqueado
+  D //Delete - borrado
 }

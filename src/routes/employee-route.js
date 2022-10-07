@@ -5,12 +5,12 @@ const router = Router();
 
 router.post('/', createEmployee);
 
-router.get('/:doc', getEmployee);
+router.get('/:id', getEmployee);
 
 router.get('/', getAllEmployees);
 
-router.put('/:doc', updateEmployee);
+router.put('/:id', updateEmployee);
 
-router.patch('/:doc', deleteEmployee);
+router.patch('/:id', deleteEmployee);
 
 module.exports = router;
