@@ -1,0 +1,286 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Hotel {
+  id          Int        @id @default(autoincrement())
+  nit         String     @unique @db.VarChar(100)
+  name        String     @db.VarChar(100)
+  address     String     @db.VarChar(100)
+  city        String     @db.VarChar(30)
+  email       String     @unique @db.VarChar(100)
+  phoneNumber String     @map("phone_number") @db.VarChar(30)
+  client      Client[]
+  employee    Employee[]
+  room        Room[]
+  service     Service[]
+  bill        Bill[]
+  booking     Booking[]
+
+  @@map("Hotels")
+}
+
+model Person {
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(60)
+  lastName     String       @map("last_name") @db.VarChar(100)
+  typeDocument TypeDocument @default(CC) @map("type_document")
+  document     String       @db.VarChar(100)
+  genre        Genre        @default(M)
+  birthdate    DateTime     @db.Date
+  phoneNumber  String       @map("phone_number") @db.VarChar(30)
+  email        String       @unique @db.VarChar(50)
+  bloodType    String       @map("blood_type") @db.VarChar(4)
+  employee     Employee[]
+  client       Client[]
+
+  @@map("Persons")
+}
+
+model Employee {
+  id         Int         @id @default(autoincrement())
+  position   String      @db.VarChar(50)
+  person     Person      @relation(fields: [personId], references: [id])
+  personId   Int         @map("person_id")
+  credential Credential?
+  role       Role        @relation(fields: [roleId], references: [id])
+  roleId     Int         @unique @map("role_id")
+  hotel      Hotel       @relation(fields: [hotelId], references: [id])
+  hotelId    Int         @map("hotel_id")
+
+  @@map("Employees")
+}
+
+model Credential {
+  id         Int      @id @default(autoincrement())
+  userName   String   @map("user_name") @db.VarChar(100)
+  password   String   @db.VarChar(255)
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int      @unique @map("employee_id")
+
+  @@map("Credentials")
+}
+
+model Role {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(50)
+  employee Employee?
+
+  @@map("Roles")
+}
+
+model Client {
+  id            Int             @id @default(autoincrement())
+  country       String          @db.VarChar(50)
+  city          String          @db.VarChar(50)
+  profession    String          @db.VarChar(50)
+  person        Person          @relation(fields: [personId], references: [id])
+  personId      Int             @map("person_id")
+  hotel         Hotel           @relation(fields: [hotelId], references: [id])
+  hotelId       Int             @map("hotel_id")
+  clientCompany ClientCompany[]
+  booking       Booking[]
+
+  @@map("Clients")
+}
+
+model Company {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(50)
+  nit           String          @unique @db.VarChar(100)
+  email         String          @unique @db.VarChar(50)
+  phoneNumber   String          @map("phone_number") @db.VarChar(30)
+  legalAgent    String          @map("legal_agent") @db.VarChar(50)
+  clientCompany ClientCompany[]
+  promotion     Promotion[]
+
+  @@map("Companies")
+}
+
+model ClientCompany {
+  client    Client  @relation(fields: [clientId], references: [id])
+  clientId  Int     @map("client_id")
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId Int     @map("company_id")
+
+  @@id([clientId, companyId])
+  @@map("Clients_companies")
+}
+
+model Promotion {
+  id             Int      @id @default(autoincrement())
+  description    String   @db.VarChar(255)
+  percentage     Float    @db.Float
+  expirationDate DateTime @map("expiration_date") @db.Date
+  company        Company  @relation(fields: [companyId], references: [id])
+  companyId      Int      @map("company_id")
+
+  @@map("Promotions")
+}
+
+model PaymentMethod {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(20)
+  paymentHistory PaymentHistory[]
+
+  @@map("Payment_methods")
+}
+
+model Bill {
+  id             Int              @id @default(autoincrement())
+  date           DateTime         @db.Date
+  hotel          Hotel            @relation(fields: [hotelId], references: [id])
+  hotelId        Int              @map("hotel_id")
+  paymentHistory PaymentHistory[]
+  roomService    RoomService[]
+  BookingRate    BookingRate[]
+
+  @@map("Bills")
+}
+
+model PaymentHistory {
+  id              Int           @id @default(autoincrement())
+  valueToPay      Int           @map("value_to_pay")
+  dateOfPay       DateTime      @map("date_of_pay") @db.Date
+  balanceDue      Int           @map("balance_due")
+  bill            Bill          @relation(fields: [billId], references: [id])
+  billId          Int           @map("bill_id")
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId Int           @map("payment_method_id")
+
+  @@map("Payments_history")
+}
+
+model RoomType {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(50)
+  rate Rate[]
+  room Room[]
+
+  @@map("Room_types")
+}
+
+model Rate {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(50)
+  roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+  roomTypeId Int      @map("room_type_id")
+
+  @@map("Rates")
+}
+
+model Room {
+  id          Int           @id @default(autoincrement())
+  number      String        @db.VarChar(10)
+  state       StateRoom     @default(A)
+  roomType    RoomType      @relation(fields: [roomTypeId], references: [id])
+  roomTypeId  Int           @map("room_type_id")
+  hotel       Hotel         @relation(fields: [hotelId], references: [id])
+  hotelId     Int           @map("hotel_id")
+  bookingRoom BookingRoom[]
+
+  @@map("Rooms")
+}
+
+model Service {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(100)
+  pricePerUnit Int           @map("price_per_unit")
+  hotel        Hotel         @relation(fields: [hotelId], references: [id])
+  hotelId      Int           @map("hotel_id")
+  roomService  RoomService[]
+
+  @@map("Services")
+}
+
+model RoomService {
+  id                   Int         @id @default(autoincrement())
+  quantity             Int
+  service              Service     @relation(fields: [serviceId], references: [id])
+  serviceId            Int         @map("service_id")
+  bil                  Bill        @relation(fields: [billId], references: [id])
+  billId               Int         @map("bill_id")
+  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
+  bookingRoomBookingId Int         @map("booking_room_booking_id")
+  bookingRoomRoomId    Int         @map("booking_room_room_id")
+
+  @@map("Room_services")
+}
+
+model Booking {
+  id           Int           @id @default(autoincrement())
+  checkInDate  DateTime      @map("check_in_date") @db.DateTime()
+  checkOutDate DateTime      @map("check_out_date") @db.DateTime()
+  details      String        @db.VarChar(255)
+  hotel        Hotel         @relation(fields: [hotelId], references: [id])
+  hotelId      Int           @map("hotel_id")
+  client       Client        @relation(fields: [clientId], references: [id])
+  clientId     Int           @map("client_id")
+  bookingRoom  BookingRoom[]
+
+  @@map("Bookings")
+}
+
+model BookingRoom {
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  bookingId   Int           @map("booking_id")
+  room        Room          @relation(fields: [roomId], references: [id])
+  roomId      Int           @map("room_id")
+  discount    Int?
+  roomService RoomService[]
+  bookingRate BookingRate[]
+
+  @@id([bookingId, roomId])
+  @@map("Booking_rooms")
+}
+
+model BookingRate {
+  id                   Int         @id @default(autoincrement())
+  bill                 Bill        @relation(fields: [billId], references: [id])
+  billId               Int         @map("bill_id")
+  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
+  bookingRoomBookingId Int         @map("booking_room_booking_id")
+  bookingRoomRoomId    Int         @map("booking_room_room_id")
+
+  @@map("Booking_rates")
+}
+
+enum TypeDocument {
+  CC // Cedula de ciudadania
+  PA // Pasaporte
+  TI // Tarjeta de identidad
+  CE // Cedula de extranjeria
+
+  @@map("Type_docuemnt")
+}
+
+enum Genre {
+  M // Male - masculino
+  F // Female - femenino
+  O // Other - otro
+
+  @@map("Genres")
+}
+
+enum StateRoom {
+  A // Available - disponible
+  M // Maintenence - mantenimiento
+  O // Out service - fuera de servicio
+
+  @@map("State_rooms")
+}
+
+enum StateBooking {
+  A // Accept
+  C // Confirm
+
+  @@map("State_bookings")
+}
