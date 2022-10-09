@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,12 +15,12 @@ model Hotel {
   city        String     @db.VarChar(30)
   email       String     @unique @db.VarChar(100)
   phoneNumber String     @map("phone_number") @db.VarChar(30)
+  bill        Bill[]
+  booking     Booking[]
   client      Client[]
   employee    Employee[]
   room        Room[]
   service     Service[]
-  bill        Bill[]
-  booking     Booking[]
 
   @@map("Hotels")
 }
@@ -39,8 +36,8 @@ model Person {
   phoneNumber  String       @map("phone_number") @db.VarChar(30)
   email        String       @unique @db.VarChar(50)
   bloodType    String       @map("blood_type") @db.VarChar(4)
-  employee     Employee[]
   client       Client[]
+  employee     Employee[]
 
   @@map("Persons")
 }
@@ -49,13 +46,13 @@ model Employee {
   id         Int           @id @default(autoincrement())
   position   String        @db.VarChar(50)
   state      StateEmployee @default(A)
-  person     Person        @relation(fields: [personId], references: [id])
   personId   Int           @map("person_id")
-  credential Credential?
-  role       Role          @relation(fields: [roleId], references: [id])
   roleId     Int           @map("role_id")
-  hotel      Hotel         @relation(fields: [hotelId], references: [id])
   hotelId    Int           @map("hotel_id")
+  hotel      Hotel         @relation(fields: [hotelId], references: [id])
+  person     Person        @relation(fields: [personId], references: [id])
+  role       Role          @relation(fields: [roleId], references: [id])
+  credential Credential?
 
   @@map("Employees")
 }
@@ -64,8 +61,8 @@ model Credential {
   id         Int      @id @default(autoincrement())
   userName   String   @map("user_name") @db.VarChar(100)
   password   String   @db.VarChar(255)
-  employee   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int      @unique @map("employee_id")
+  employee   Employee @relation(fields: [employeeId], references: [id])
 
   @@map("Credentials")
 }
@@ -83,12 +80,12 @@ model Client {
   country       String          @db.VarChar(50)
   city          String          @db.VarChar(50)
   profession    String          @db.VarChar(50)
-  person        Person          @relation(fields: [personId], references: [id])
   personId      Int             @map("person_id")
-  hotel         Hotel           @relation(fields: [hotelId], references: [id])
   hotelId       Int             @map("hotel_id")
-  clientCompany ClientCompany[]
+  hotel         Hotel           @relation(fields: [hotelId], references: [id])
+  person        Person          @relation(fields: [personId], references: [id])
   booking       Booking[]
+  clientCompany ClientCompany[]
 
   @@map("Clients")
 }
@@ -107,10 +104,10 @@ model Company {
 }
 
 model ClientCompany {
-  client    Client  @relation(fields: [clientId], references: [id])
   clientId  Int     @map("client_id")
-  company   Company @relation(fields: [companyId], references: [id])
   companyId Int     @map("company_id")
+  client    Client  @relation(fields: [clientId], references: [id])
+  company   Company @relation(fields: [companyId], references: [id])
 
   @@id([clientId, companyId])
   @@map("Clients_companies")
@@ -121,8 +118,8 @@ model Promotion {
   description    String   @db.VarChar(255)
   percentage     Float    @db.Float
   expirationDate DateTime @map("expiration_date") @db.Date
-  company        Company  @relation(fields: [companyId], references: [id])
   companyId      Int      @map("company_id")
+  company        Company  @relation(fields: [companyId], references: [id])
 
   @@map("Promotions")
 }
@@ -138,11 +135,11 @@ model PaymentMethod {
 model Bill {
   id             Int              @id @default(autoincrement())
   date           DateTime         @db.Date
-  hotel          Hotel            @relation(fields: [hotelId], references: [id])
   hotelId        Int              @map("hotel_id")
+  hotel          Hotel            @relation(fields: [hotelId], references: [id])
+  BookingRate    BookingRate[]
   paymentHistory PaymentHistory[]
   roomService    RoomService[]
-  BookingRate    BookingRate[]
 
   @@map("Bills")
 }
@@ -152,10 +149,10 @@ model PaymentHistory {
   valueToPay      Int           @map("value_to_pay")
   dateOfPay       DateTime      @map("date_of_pay") @db.Date
   balanceDue      Int           @map("balance_due")
-  bill            Bill          @relation(fields: [billId], references: [id])
   billId          Int           @map("bill_id")
-  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
   paymentMethodId Int           @map("payment_method_id")
+  bill            Bill          @relation(fields: [billId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   @@map("Payments_history")
 }
@@ -172,8 +169,8 @@ model RoomType {
 model Rate {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(50)
-  roomType   RoomType @relation(fields: [roomTypeId], references: [id])
   roomTypeId Int      @map("room_type_id")
+  roomType   RoomType @relation(fields: [roomTypeId], references: [id])
 
   @@map("Rates")
 }
@@ -182,10 +179,10 @@ model Room {
   id          Int           @id @default(autoincrement())
   number      String        @db.VarChar(10)
   state       StateRoom     @default(A)
-  roomType    RoomType      @relation(fields: [roomTypeId], references: [id])
   roomTypeId  Int           @map("room_type_id")
-  hotel       Hotel         @relation(fields: [hotelId], references: [id])
   hotelId     Int           @map("hotel_id")
+  hotel       Hotel         @relation(fields: [hotelId], references: [id])
+  roomType    RoomType      @relation(fields: [roomTypeId], references: [id])
   bookingRoom BookingRoom[]
 
   @@map("Rooms")
@@ -195,8 +192,8 @@ model Service {
   id           Int           @id @default(autoincrement())
   name         String        @db.VarChar(100)
   pricePerUnit Int           @map("price_per_unit")
-  hotel        Hotel         @relation(fields: [hotelId], references: [id])
   hotelId      Int           @map("hotel_id")
+  hotel        Hotel         @relation(fields: [hotelId], references: [id])
   roomService  RoomService[]
 
   @@map("Services")
@@ -205,39 +202,39 @@ model Service {
 model RoomService {
   id                   Int         @id @default(autoincrement())
   quantity             Int
-  service              Service     @relation(fields: [serviceId], references: [id])
   serviceId            Int         @map("service_id")
-  bil                  Bill        @relation(fields: [billId], references: [id])
   billId               Int         @map("bill_id")
-  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
   bookingRoomBookingId Int         @map("booking_room_booking_id")
   bookingRoomRoomId    Int         @map("booking_room_room_id")
+  bil                  Bill        @relation(fields: [billId], references: [id])
+  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
+  service              Service     @relation(fields: [serviceId], references: [id])
 
   @@map("Room_services")
 }
 
 model Booking {
   id           Int           @id @default(autoincrement())
-  checkInDate  DateTime      @map("check_in_date") @db.DateTime()
-  checkOutDate DateTime      @map("check_out_date") @db.DateTime()
+  checkInDate  DateTime      @map("check_in_date") @db.DateTime(0)
+  checkOutDate DateTime      @map("check_out_date") @db.DateTime(0)
   details      String        @db.VarChar(255)
-  hotel        Hotel         @relation(fields: [hotelId], references: [id])
   hotelId      Int           @map("hotel_id")
-  client       Client        @relation(fields: [clientId], references: [id])
   clientId     Int           @map("client_id")
+  client       Client        @relation(fields: [clientId], references: [id])
+  hotel        Hotel         @relation(fields: [hotelId], references: [id])
   bookingRoom  BookingRoom[]
 
   @@map("Bookings")
 }
 
 model BookingRoom {
-  booking     Booking       @relation(fields: [bookingId], references: [id])
   bookingId   Int           @map("booking_id")
-  room        Room          @relation(fields: [roomId], references: [id])
   roomId      Int           @map("room_id")
   discount    Int?
-  roomService RoomService[]
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  room        Room          @relation(fields: [roomId], references: [id])
   bookingRate BookingRate[]
+  roomService RoomService[]
 
   @@id([bookingId, roomId])
   @@map("Booking_rooms")
@@ -245,49 +242,36 @@ model BookingRoom {
 
 model BookingRate {
   id                   Int         @id @default(autoincrement())
-  bill                 Bill        @relation(fields: [billId], references: [id])
   billId               Int         @map("bill_id")
-  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
   bookingRoomBookingId Int         @map("booking_room_booking_id")
   bookingRoomRoomId    Int         @map("booking_room_room_id")
+  bill                 Bill        @relation(fields: [billId], references: [id])
+  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
 
   @@map("Booking_rates")
 }
 
 enum TypeDocument {
-  CC // Cedula de ciudadania
-  PA // Pasaporte
-  TI // Tarjeta de identidad
-  CE // Cedula de extranjeria
-
-  @@map("Type_docuemnt")
+  CC
+  PA
+  TI
+  CE
 }
 
 enum Genre {
-  M // Male - masculino
-  F // Female - femenino
-  O // Other - otro
-
-  @@map("Genres")
+  M
+  F
+  O
 }
 
 enum StateRoom {
-  A // Available - disponible
-  M // Maintenence - mantenimiento
-  O // Out service - fuera de servicio
-
-  @@map("State_rooms")
-}
-
-enum StateBooking {
-  A // Accept
-  C // Confirm
-
-  @@map("State_bookings")
+  A
+  M
+  O
 }
 
 enum StateEmployee {
-  A //Active - activo
-  B //Block - bloqueado
-  D //Delete - borrado
+  A
+  B
+  D
 }

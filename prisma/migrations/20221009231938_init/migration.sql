@@ -34,11 +34,11 @@ CREATE TABLE `Persons` (
 CREATE TABLE `Employees` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` VARCHAR(50) NOT NULL,
+    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'A',
     `person_id` INTEGER NOT NULL,
     `role_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `Employees_role_id_key`(`role_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -188,8 +188,8 @@ CREATE TABLE `Room_services` (
 -- CreateTable
 CREATE TABLE `Bookings` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `check_in_date` DATETIME NOT NULL,
-    `check_out_date` DATETIME NOT NULL,
+    `check_in_date` DATETIME(0) NOT NULL,
+    `check_out_date` DATETIME(0) NOT NULL,
     `details` VARCHAR(255) NOT NULL,
     `hotel_id` INTEGER NOT NULL,
     `client_id` INTEGER NOT NULL,
@@ -217,22 +217,22 @@ CREATE TABLE `Booking_rates` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
+ALTER TABLE `Employees` ADD CONSTRAINT `Employees_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Employees` ADD CONSTRAINT `Employees_person_id_fkey` FOREIGN KEY (`person_id`) REFERENCES `Persons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Employees` ADD CONSTRAINT `Employees_role_id_fkey` FOREIGN KEY (`role_id`) REFERENCES `Roles`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Employees` ADD CONSTRAINT `Employees_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Credentials` ADD CONSTRAINT `Credentials_employee_id_fkey` FOREIGN KEY (`employee_id`) REFERENCES `Employees`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Clients` ADD CONSTRAINT `Clients_person_id_fkey` FOREIGN KEY (`person_id`) REFERENCES `Persons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Clients` ADD CONSTRAINT `Clients_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Clients` ADD CONSTRAINT `Clients_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Clients` ADD CONSTRAINT `Clients_person_id_fkey` FOREIGN KEY (`person_id`) REFERENCES `Persons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Clients_companies` ADD CONSTRAINT `Clients_companies_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -256,16 +256,13 @@ ALTER TABLE `Payments_history` ADD CONSTRAINT `Payments_history_payment_method_i
 ALTER TABLE `Rates` ADD CONSTRAINT `Rates_room_type_id_fkey` FOREIGN KEY (`room_type_id`) REFERENCES `Room_types`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Rooms` ADD CONSTRAINT `Rooms_room_type_id_fkey` FOREIGN KEY (`room_type_id`) REFERENCES `Room_types`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Rooms` ADD CONSTRAINT `Rooms_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Services` ADD CONSTRAINT `Services_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Rooms` ADD CONSTRAINT `Rooms_room_type_id_fkey` FOREIGN KEY (`room_type_id`) REFERENCES `Room_types`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_service_id_fkey` FOREIGN KEY (`service_id`) REFERENCES `Services`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Services` ADD CONSTRAINT `Services_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -274,10 +271,13 @@ ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_bill_id_fkey` FOREIGN 
 ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_booking_room_booking_id_booking_room_room_id_fkey` FOREIGN KEY (`booking_room_booking_id`, `booking_room_room_id`) REFERENCES `Booking_rooms`(`booking_id`, `room_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_service_id_fkey` FOREIGN KEY (`service_id`) REFERENCES `Services`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Booking_rooms` ADD CONSTRAINT `Booking_rooms_booking_id_fkey` FOREIGN KEY (`booking_id`) REFERENCES `Bookings`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

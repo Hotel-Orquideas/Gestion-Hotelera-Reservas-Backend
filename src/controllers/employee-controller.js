@@ -22,7 +22,7 @@ const createEmployee = async (req = request, res = response) => {
 				},
 			},
 			role: {
-				connect: { id: 2 },
+				connect: { id: 3 },
 			},
 			hotel: {
 				connect: { id: 1 },
