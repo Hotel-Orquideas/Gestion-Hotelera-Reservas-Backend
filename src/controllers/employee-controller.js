@@ -117,7 +117,66 @@ const getAllEmployees = async (req = request, res = response) => {
 	console.log(results);
 };
 
-const updateEmployee = (req = request, res = response) => {};
+const updateEmployee = async (req = request, res = response) => {
+	const document = req.params.doc;
+	const { position, ...toUpdate } = req.body;
+	const employee = await prisma.employee.findFirst({
+		where: {
+			person: {
+				document,
+			},
+		},
+	});
+
+	const { id } = employee;
+
+	const result = await prisma.employee.update({
+		where: {
+			id,
+		},
+		data: {
+			position,
+			person: {
+				update: toUpdate,
+			},
+		},
+		select: {
+			id: true,
+			position: true,
+			state: true,
+			roleId: false,
+			hotelId: false,
+			person: {
+				select: {
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
+				},
+			},
+			role: {
+				select: {
+					name: true,
+				},
+			},
+			hotel: {
+				select: {
+					name: true,
+				},
+			},
+		},
+	});
+	res.json({
+		msg: 'Employee updated sucessfull!',
+		result,
+	});
+};
 
 const deleteEmployee = async (req = request, res = response) => {
 	const document = req.params.doc;
