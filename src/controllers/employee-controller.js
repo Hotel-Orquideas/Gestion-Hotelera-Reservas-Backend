@@ -3,9 +3,7 @@ const { request, response } = require('express');
 
 const prisma = new PrismaClient();
 
-
 const createEmployee = async (req = request, res = response) => {
-	
 	const { name, lastName, typeDocument, document, genre, birthdate, phoneNumber, email, bloodType, position } = req.body;
 	const result = await prisma.employee.create({
 		data: {
@@ -39,7 +37,6 @@ const createEmployee = async (req = request, res = response) => {
 	console.log(result);
 };
 
-
 const getEmployee = async (req = request, res = response) => {
 	const document = req.params.doc;
 	const result = await prisma.employee.findFirst({
@@ -52,6 +49,8 @@ const getEmployee = async (req = request, res = response) => {
 			id: true,
 			position: true,
 			state: true,
+			roleId: false,
+			hotelId: false,
 			person: {
 				select: {
 					id: true,
@@ -81,7 +80,6 @@ const getEmployee = async (req = request, res = response) => {
 	res.json(result);
 };
 
-
 const getAllEmployees = async (req = request, res = response) => {
 	const results = await prisma.employee.findMany({
 		where: {
@@ -91,6 +89,8 @@ const getAllEmployees = async (req = request, res = response) => {
 			id: true,
 			position: true,
 			state: true,
+			roleId: false,
+			hotelId: false,
 			person: {
 				select: {
 					id: true,
@@ -181,7 +181,6 @@ const updateEmployee = async (req = request, res = response) => {
 		result,
 	});
 };
-
 
 const deleteEmployee = async (req = request, res = response) => {
 	const document = req.params.doc;
