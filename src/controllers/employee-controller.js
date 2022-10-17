@@ -1,11 +1,16 @@
 const { PrismaClient } = require('@prisma/client');
 const { request, response } = require('express');
+const bcryptjs = require('bcryptjs');
 
-const prisma = new PrismaClient();
+let prisma = new PrismaClient();
 
 const createEmployee = async (req = request, res = response) => {
 	const { name, lastName, typeDocument, document, genre, birthdate, phoneNumber, email, bloodType, position } = req.body;
-	const result = await prisma.employee.create({
+
+	const salt = bcryptjs.genSaltSync();
+	const passwordEncrypted = bcryptjs.hashSync('Abcde12345', salt);
+
+	const resultEmployee = await prisma.employee.create({
 		data: {
 			position,
 			person: {
@@ -30,11 +35,22 @@ const createEmployee = async (req = request, res = response) => {
 		},
 		include: { person: true },
 	});
+
+	const { id } = resultEmployee;
+
+	const resultCredential = await prisma.credential.create({
+		data: {
+			userName: email,
+			password: passwordEncrypted,
+			employeeId: id,
+		},
+	});
 	res.json({
 		msg: 'Employee create sucessfull!',
-		result,
+		resultEmployee,
+		resultCredential,
 	});
-	console.log(result);
+	console.log('Empleado creado exitosamente!');
 };
 
 const getEmployee = async (req = request, res = response) => {
@@ -212,4 +228,5 @@ module.exports = {
 	getAllEmployees,
 	updateEmployee,
 	deleteEmployee,
+	prisma,
 };

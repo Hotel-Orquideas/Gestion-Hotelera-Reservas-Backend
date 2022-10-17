@@ -6,6 +6,7 @@ class Server {
 		this.app = express();
 		this.port = 3005;
 		this.pathEmployee = '/management/api/employee';
+		this.pathAuth = '/management/api/auth';
 		this.middleware();
 		this.routes();
 	}
@@ -17,6 +18,7 @@ class Server {
 
 	routes() {
 		this.app.use(this.pathEmployee, require('../routes/employee-route'));
+		this.app.use(this.pathAuth, require('../routes/auth-route'));
 	}
 
 	listen() {

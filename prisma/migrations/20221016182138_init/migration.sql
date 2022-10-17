@@ -34,7 +34,7 @@ CREATE TABLE `Persons` (
 CREATE TABLE `Employees` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` VARCHAR(50) NOT NULL,
-    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'A',
+    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'B',
     `person_id` INTEGER NOT NULL,
     `role_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
