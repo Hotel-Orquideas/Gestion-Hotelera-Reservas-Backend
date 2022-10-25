@@ -23,43 +23,10 @@ const createCompany = async (req = request, res = response) => {
 };
 
 const getCompany = async (req = request, res = response) => {
-	const document = req.params.doc;
-	const result = await prisma.employee.findFirst({
+	const nit = req.params.nit;
+	const result = await prisma.company.findUnique({
 		where: {
-			person: {
-				document,
-			},
-		},
-		select: {
-			id: true,
-			position: true,
-			state: true,
-			roleId: false,
-			hotelId: false,
-			person: {
-				select: {
-					id: true,
-					name: true,
-					lastName: true,
-					typeDocument: true,
-					document: true,
-					genre: true,
-					birthdate: true,
-					phoneNumber: true,
-					email: true,
-					bloodType: true,
-				},
-			},
-			role: {
-				select: {
-					name: true,
-				},
-			},
-			hotel: {
-				select: {
-					name: true,
-				},
-			},
+			nit,
 		},
 	});
 	res.json(result);
