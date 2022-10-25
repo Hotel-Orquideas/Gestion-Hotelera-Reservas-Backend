@@ -33,42 +33,7 @@ const getCompany = async (req = request, res = response) => {
 };
 
 const getAllCompanies = async (req = request, res = response) => {
-	const results = await prisma.employee.findMany({
-		where: {
-			state: 'A',
-		},
-		select: {
-			id: true,
-			position: true,
-			state: true,
-			roleId: false,
-			hotelId: false,
-			person: {
-				select: {
-					id: true,
-					name: true,
-					lastName: true,
-					typeDocument: true,
-					document: true,
-					genre: true,
-					birthdate: true,
-					phoneNumber: true,
-					email: true,
-					bloodType: true,
-				},
-			},
-			role: {
-				select: {
-					name: true,
-				},
-			},
-			hotel: {
-				select: {
-					name: true,
-				},
-			},
-		},
-	});
+	const results = await prisma.company.findMany({});
 	res.json(results);
 	console.log(results);
 };
