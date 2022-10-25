@@ -43,16 +43,16 @@ model Person {
 }
 
 model Employee {
-  id         Int           @id @default(autoincrement())
-  position   String        @db.VarChar(50)
-  state      StateEmployee @default(B)
-  createdAt  DateTime      @default(now()) @map("created_at")
-  personId   Int           @map("person_id")
-  roleId     Int           @map("role_id")
-  hotelId    Int           @map("hotel_id")
-  hotel      Hotel         @relation(fields: [hotelId], references: [id])
-  person     Person        @relation(fields: [personId], references: [id])
-  role       Role          @relation(fields: [roleId], references: [id])
+  id         Int         @id @default(autoincrement())
+  position   String      @db.VarChar(50)
+  state      StateEntity @default(B)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  personId   Int         @map("person_id")
+  roleId     Int         @map("role_id")
+  hotelId    Int         @map("hotel_id")
+  hotel      Hotel       @relation(fields: [hotelId], references: [id])
+  person     Person      @relation(fields: [personId], references: [id])
+  role       Role        @relation(fields: [roleId], references: [id])
   credential Credential?
 
   @@map("Employees")
@@ -81,6 +81,7 @@ model Client {
   country       String          @db.VarChar(50)
   city          String          @db.VarChar(50)
   profession    String          @db.VarChar(50)
+  state         StateEntity     @default(A)
   personId      Int             @map("person_id")
   hotelId       Int             @map("hotel_id")
   hotel         Hotel           @relation(fields: [hotelId], references: [id])
@@ -98,6 +99,7 @@ model Company {
   email         String          @unique @db.VarChar(50)
   phoneNumber   String          @map("phone_number") @db.VarChar(30)
   legalAgent    String          @map("legal_agent") @db.VarChar(50)
+  state         StateEntity     @default(A)
   clientCompany ClientCompany[]
   promotion     Promotion[]
 
@@ -271,7 +273,7 @@ enum StateRoom {
   O
 }
 
-enum StateEmployee {
+enum StateEntity {
   A
   B
   D

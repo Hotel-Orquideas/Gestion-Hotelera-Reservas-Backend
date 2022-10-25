@@ -39,86 +39,32 @@ const getAllCompanies = async (req = request, res = response) => {
 };
 
 const updateCompany = async (req = request, res = response) => {
-	const document = req.params.doc;
-	const { position, ...toUpdate } = req.body;
-	const employee = await prisma.employee.findFirst({
-		where: {
-			person: {
-				document,
-			},
-		},
-	});
+	const nit = req.params.nit;
+	const { ...toUpdate } = req.body;
 
-	const { id } = employee;
-
-	const result = await prisma.employee.update({
+	const result = await prisma.company.update({
 		where: {
-			id,
+			nit,
 		},
-		data: {
-			position,
-			person: {
-				update: toUpdate,
-			},
-		},
-		select: {
-			id: true,
-			position: true,
-			state: true,
-			roleId: false,
-			hotelId: false,
-			person: {
-				select: {
-					id: true,
-					name: true,
-					lastName: true,
-					typeDocument: true,
-					document: true,
-					genre: true,
-					birthdate: true,
-					phoneNumber: true,
-					email: true,
-					bloodType: true,
-				},
-			},
-			role: {
-				select: {
-					name: true,
-				},
-			},
-			hotel: {
-				select: {
-					name: true,
-				},
-			},
-		},
+		data: toUpdate,
 	});
 	res.json({
-		msg: 'Employee updated sucessfull!',
+		msg: 'Company updated sucessfull!',
 		result,
 	});
 };
 
 const deleteCompany = async (req = request, res = response) => {
-	const document = req.params.doc;
-	const employee = await prisma.employee.findFirst({
-		where: {
-			person: {
-				document,
-			},
-		},
-	});
+	const nit = req.params.nit;
 
-	const { id } = employee;
-
-	const result = await prisma.employee.update({
-		where: { id },
+	const result = await prisma.company.update({
+		where: { nit },
 		data: {
 			state: 'D',
 		},
 	});
 	res.json({
-		msg: 'Employee delete sucessfull!',
+		msg: 'Company delete sucessfull!',
 		result,
 	});
 };

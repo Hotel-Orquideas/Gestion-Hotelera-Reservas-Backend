@@ -12,10 +12,10 @@
   "license": "ISC",
   "devDependencies": {
     "express": "^4.18.1",
-    "prisma": "^4.4.0"
+    "prisma": "^4.5.0"
   },
   "dependencies": {
-    "@prisma/client": "^4.4.0",
+    "@prisma/client": "^4.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express-validator": "^6.14.2",
