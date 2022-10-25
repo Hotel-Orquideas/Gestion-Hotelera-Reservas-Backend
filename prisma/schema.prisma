@@ -46,6 +46,7 @@ model Employee {
   id         Int           @id @default(autoincrement())
   position   String        @db.VarChar(50)
   state      StateEmployee @default(B)
+  createdAt  DateTime      @default(now()) @map("created_at")
   personId   Int           @map("person_id")
   roleId     Int           @map("role_id")
   hotelId    Int           @map("hotel_id")

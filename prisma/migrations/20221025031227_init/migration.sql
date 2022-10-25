@@ -35,6 +35,7 @@ CREATE TABLE `Employees` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` VARCHAR(50) NOT NULL,
     `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'B',
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `person_id` INTEGER NOT NULL,
     `role_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
