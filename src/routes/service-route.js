@@ -16,12 +16,12 @@ router.post(
 	createService
 );
 
-router.get('/:nit', getService);
+router.get('/:id', getService);
 
 router.get('/', getAllServices);
 
-router.put('/:nit', updateService);
+router.put('/:id', updateService);
 
-router.patch('/:nit', deleteService);
+router.patch('/:id', deleteService);
 
 module.exports = router;

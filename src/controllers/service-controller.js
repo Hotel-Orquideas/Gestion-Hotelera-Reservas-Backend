@@ -22,10 +22,10 @@ const createService = async (req = request, res = response) => {
 };
 
 const getService = async (req = request, res = response) => {
-	const nit = req.params.nit;
-	const result = await prisma.company.findUnique({
+	const id = parseInt(req.params.id);
+	const result = await prisma.service.findUnique({
 		where: {
-			nit,
+			id,
 		},
 	});
 	res.json(result);
