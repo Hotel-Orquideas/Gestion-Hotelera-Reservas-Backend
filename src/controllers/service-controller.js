@@ -38,32 +38,28 @@ const getAllServices = async (req = request, res = response) => {
 };
 
 const updateService = async (req = request, res = response) => {
-	const nit = req.params.nit;
-	const { ...toUpdate } = req.body;
+	const id = parseInt(req.params.id);
+	const { hotelId, ...toUpdate } = req.body;
 
-	const result = await prisma.company.update({
+	const result = await prisma.service.update({
 		where: {
-			nit,
+			id,
 		},
 		data: toUpdate,
 	});
 	res.json({
-		msg: 'Company updated sucessfull!',
+		msg: 'Service updated sucessfull!',
 		result,
 	});
 };
 
 const deleteService = async (req = request, res = response) => {
-	const nit = req.params.nit;
-
-	const result = await prisma.company.update({
-		where: { nit },
-		data: {
-			state: 'D',
-		},
+	const id = parseInt(req.params.id);
+	const result = await prisma.service.delete({
+		where: { id },
 	});
 	res.json({
-		msg: 'Company delete sucessfull!',
+		msg: 'Service delete sucessfull!',
 		result,
 	});
 };

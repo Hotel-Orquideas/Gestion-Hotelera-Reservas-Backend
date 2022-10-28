@@ -22,6 +22,6 @@ router.get('/', getAllServices);
 
 router.put('/:id', updateService);
 
-router.patch('/:id', deleteService);
+router.delete('/:id', deleteService);
 
 module.exports = router;
