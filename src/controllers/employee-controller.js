@@ -99,7 +99,14 @@ const getEmployee = async (req = request, res = response) => {
 const getAllEmployees = async (req = request, res = response) => {
 	const results = await prisma.employee.findMany({
 		where: {
-			state: 'A',
+			OR: [
+				{
+					state: 'A',
+				},
+				{
+					state: 'B',
+				},
+			],
 		},
 		select: {
 			id: true,

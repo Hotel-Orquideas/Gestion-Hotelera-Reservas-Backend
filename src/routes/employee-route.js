@@ -13,7 +13,7 @@ router.post(
 		check('typeDocument').isIn(['CC', 'PA', 'TI', 'CE']),
 		check('document', 'documento obligatorio').not().isEmpty(),
 		check('genre').isIn(['M', 'F', 'O']),
-		check('birthdate', 'fecha de nacimiento obligatorio').isDate().not().isEmpty(),
+		check('birthdate', 'fecha de nacimiento obligatorio').not().isEmpty(),
 		check('phoneNumber', 'número celular es obligatorio').not().isEmpty(),
 		check('email', 'correo electronico no válido').isEmail(),
 		check('position', 'cargo obligatorio').not().isEmpty(),
