@@ -1,6 +1,5 @@
 const { prisma } = require('./employee-controller');
 const { request, response } = require('express');
-const bcryptjs = require('bcryptjs');
 
 const createCompany = async (req = request, res = response) => {
 	const { name, nit, email, phoneNumber, legalAgent } = req.body;
