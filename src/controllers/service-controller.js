@@ -32,18 +32,7 @@ const getService = async (req = request, res = response) => {
 };
 
 const getAllServices = async (req = request, res = response) => {
-	const results = await prisma.company.findMany({
-		where: {
-			OR: [
-				{
-					state: 'A',
-				},
-				{
-					state: 'B',
-				},
-			],
-		},
-	});
+	const results = await prisma.service.findMany({});
 	res.json(results);
 	console.log(results);
 };
