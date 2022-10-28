@@ -9,6 +9,7 @@ class Server {
 		this.pathEmployee = '/management/api/employee';
 		this.pathCompanies = '/management/api/company';
 		this.pathServices = '/management/api/service';
+		this.pathRoomType = '/management/api/roomType';
 		this.middleware();
 		this.routes();
 	}
@@ -22,7 +23,8 @@ class Server {
 		this.app.use(this.pathAuth, require('../routes/auth-route'));
 		this.app.use(this.pathEmployee, require('../routes/employee-route'));
 		this.app.use(this.pathCompanies, require('../routes/company-route'));
-		this.app.use(this.pathServices, require('../routes/service-route'))
+		this.app.use(this.pathServices, require('../routes/service-route'));
+		this.app.use(this.pathRoomType, require('../routes/room-types-route'));
 	}
 
 	listen() {
