@@ -33,7 +33,18 @@ const getCompany = async (req = request, res = response) => {
 };
 
 const getAllCompanies = async (req = request, res = response) => {
-	const results = await prisma.company.findMany({});
+	const results = await prisma.company.findMany({
+		where: {
+			OR: [
+				{
+					state: 'A',
+				},
+				{
+					state: 'B',
+				},
+			],
+		},
+	});
 	res.json(results);
 	console.log(results);
 };
