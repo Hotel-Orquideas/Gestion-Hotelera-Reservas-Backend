@@ -31,7 +31,7 @@ model Person {
   lastName     String       @map("last_name") @db.VarChar(100)
   typeDocument TypeDocument @default(CC) @map("type_document")
   document     String       @db.VarChar(100)
-  genre        Genre        @default(M)
+  genre        Genre
   birthdate    DateTime     @db.Date
   phoneNumber  String       @map("phone_number") @db.VarChar(30)
   email        String       @unique @db.VarChar(50)
@@ -161,10 +161,11 @@ model PaymentHistory {
 }
 
 model RoomType {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(50)
-  rate Rate[]
-  room Room[]
+  id           Int    @id @default(autoincrement())
+  name         String @db.VarChar(50)
+  numMaxGuests Int    @map("num_max_guests")
+  rate         Rate[]
+  room         Room[]
 
   @@map("Room_types")
 }
@@ -172,6 +173,7 @@ model RoomType {
 model Rate {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(50)
+  value      Int
   roomTypeId Int      @map("room_type_id")
   roomType   RoomType @relation(fields: [roomTypeId], references: [id])
 
@@ -274,7 +276,8 @@ enum StateRoom {
 }
 
 enum StateEntity {
-  A
-  B
-  D
+  A // Active
+  B // Block
+  D // Delete
+  I // Inactive
 }

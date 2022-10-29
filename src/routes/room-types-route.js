@@ -5,7 +5,11 @@ const { validateFields } = require('../middlewares/validate-fields');
 
 const router = Router();
 
-router.post('/', [check('name', 'nombre obligatorio').not().isEmpty(), validateFields], createRoomType);
+router.post(
+	'/',
+	[check('name', 'nombre obligatorio').not().isEmpty(), check('numMaxGuests', 'número máximo de huespedes obligatorio').not().isEmpty(), validateFields],
+	createRoomType
+);
 
 router.get('/:id', getRoomType);
 

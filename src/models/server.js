@@ -10,6 +10,7 @@ class Server {
 		this.pathCompanies = '/management/api/company';
 		this.pathServices = '/management/api/service';
 		this.pathRoomType = '/management/api/roomType';
+		this.pathRate = '/management/api/rate';
 		this.middleware();
 		this.routes();
 	}
@@ -25,6 +26,7 @@ class Server {
 		this.app.use(this.pathCompanies, require('../routes/company-route'));
 		this.app.use(this.pathServices, require('../routes/service-route'));
 		this.app.use(this.pathRoomType, require('../routes/room-types-route'));
+		this.app.use(this.pathRate, require('../routes/rate-route'));
 	}
 
 	listen() {

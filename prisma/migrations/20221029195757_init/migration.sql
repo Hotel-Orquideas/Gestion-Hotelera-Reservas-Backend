@@ -20,7 +20,7 @@ CREATE TABLE `Persons` (
     `last_name` VARCHAR(100) NOT NULL,
     `type_document` ENUM('CC', 'PA', 'TI', 'CE') NOT NULL DEFAULT 'CC',
     `document` VARCHAR(100) NOT NULL,
-    `genre` ENUM('M', 'F', 'O') NOT NULL DEFAULT 'M',
+    `genre` ENUM('M', 'F', 'O') NOT NULL,
     `birthdate` DATE NOT NULL,
     `phone_number` VARCHAR(30) NOT NULL,
     `email` VARCHAR(50) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `Persons` (
 CREATE TABLE `Employees` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `position` VARCHAR(50) NOT NULL,
-    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'B',
+    `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'B',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `person_id` INTEGER NOT NULL,
     `role_id` INTEGER NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `Clients` (
     `country` VARCHAR(50) NOT NULL,
     `city` VARCHAR(50) NOT NULL,
     `profession` VARCHAR(50) NOT NULL,
-    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'A',
+    `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'A',
     `person_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
 
@@ -83,7 +83,7 @@ CREATE TABLE `Companies` (
     `email` VARCHAR(50) NOT NULL,
     `phone_number` VARCHAR(30) NOT NULL,
     `legal_agent` VARCHAR(50) NOT NULL,
-    `state` ENUM('A', 'B', 'D') NOT NULL DEFAULT 'A',
+    `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'A',
 
     UNIQUE INDEX `Companies_nit_key`(`nit`),
     UNIQUE INDEX `Companies_email_key`(`email`),
@@ -142,6 +142,7 @@ CREATE TABLE `Payments_history` (
 CREATE TABLE `Room_types` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
+    `num_max_guests` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -150,6 +151,7 @@ CREATE TABLE `Room_types` (
 CREATE TABLE `Rates` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
+    `value` INTEGER NOT NULL,
     `room_type_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

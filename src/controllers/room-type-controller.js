@@ -2,11 +2,12 @@ const { prisma } = require('./employee-controller');
 const { request, response } = require('express');
 
 const createRoomType = async (req = request, res = response) => {
-	const { name } = req.body;
+	const { name, numMaxGuests } = req.body;
 
 	const resultRoomType = await prisma.roomType.create({
 		data: {
 			name,
+			numMaxGuests,
 		},
 	});
 
@@ -35,13 +36,13 @@ const getAllRoomTypes = async (req = request, res = response) => {
 
 const updateRoomType = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const name = req.body;
+	const { ...toUpdate } = req.body;
 
 	const result = await prisma.roomType.update({
 		where: {
 			id,
 		},
-		data: name,
+		data: toUpdate,
 	});
 	res.json({
 		msg: 'Room Type updated sucessfull!',
