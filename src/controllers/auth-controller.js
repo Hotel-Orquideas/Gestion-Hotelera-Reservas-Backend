@@ -1,13 +1,14 @@
 const { prisma } = require('./employee-controller');
 const { request, response } = require('express');
 const bcryptjs = require('bcryptjs');
+const { generateJWT } = require('../helpers/generate-jwt');
 
 const login = async (req = request, res = response) => {
 	const { userName, password } = req.body;
 
 	try {
 		/*
-		/Validar si el correo existe
+		/Validar si el correo existe **
 		*/
 		const employeeResult = await prisma.employee.findFirst({
 			where: {
@@ -42,8 +43,12 @@ const login = async (req = request, res = response) => {
 			});
 		}
 
+		const token = await generateJWT(employeeResult.id, credential.userName);
+		console.log(token);
+
 		res.json({
 			msg: 'Login ok',
+			token,
 		});
 	} catch (error) {
 		console.log(error);
