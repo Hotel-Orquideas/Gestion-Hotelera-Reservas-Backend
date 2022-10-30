@@ -34,16 +34,16 @@ const getRoom = async (req = request, res = response) => {
 };
 
 const getAllRooms = async (req = request, res = response) => {
-	const results = await prisma.roomType.findMany({});
+	const results = await prisma.room.findMany({});
 	res.json(results);
 	console.log(results);
 };
 
 const updateRoom = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const { ...toUpdate } = req.body;
+	const { hotelId, ...toUpdate } = req.body;
 
-	const result = await prisma.roomType.update({
+	const result = await prisma.room.update({
 		where: {
 			id,
 		},
