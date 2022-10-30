@@ -20,7 +20,7 @@ const createRoom = async (req = request, res = response) => {
 		msg: 'Room create sucessfull!',
 		resultRoom,
 	});
-	console.log('Tipo de habitacion creado exitosamente!');
+	console.log('Habitacion creada exitosamente!');
 };
 
 const getRoom = async (req = request, res = response) => {
@@ -50,18 +50,18 @@ const updateRoom = async (req = request, res = response) => {
 		data: toUpdate,
 	});
 	res.json({
-		msg: 'Room Type updated sucessfull!',
+		msg: 'Room updated sucessfull!',
 		result,
 	});
 };
 
 const deleteRoom = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const result = await prisma.roomType.delete({
+	const result = await prisma.room.delete({
 		where: { id },
 	});
 	res.json({
-		msg: 'Room Type delete sucessfull!',
+		msg: 'Room deleted sucessfull!',
 		result,
 	});
 };
