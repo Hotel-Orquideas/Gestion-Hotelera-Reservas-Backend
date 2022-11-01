@@ -52,13 +52,22 @@ const updateRoomType = async (req = request, res = response) => {
 
 const deleteRoomType = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const result = await prisma.roomType.delete({
-		where: { id },
-	});
-	res.json({
-		msg: 'Room Type delete sucessfull!',
-		result,
-	});
+	try {
+		const result = await prisma.roomType.delete({
+			where: { id },
+		});
+
+		res.json({
+			msg: 'Room Type delete sucessfull!',
+			result,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(401).json({
+			msg: 'No se puede completar la acción.',
+			error,
+		});
+	}
 };
 
 module.exports = {
