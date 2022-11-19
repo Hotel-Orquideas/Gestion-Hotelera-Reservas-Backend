@@ -12,7 +12,7 @@ class Server {
 		this.pathRoomType = '/management/api/roomType';
 		this.pathRate = '/management/api/rate';
 		this.pathRoom = '/management/api/room';
-		
+		this.pathPromotion = '/management/api/promotion';
 		this.middleware();
 		this.routes();
 	}
@@ -30,6 +30,7 @@ class Server {
 		this.app.use(this.pathRoomType, require('../routes/room-types-route'));
 		this.app.use(this.pathRate, require('../routes/rate-route'));
 		this.app.use(this.pathRoom, require('../routes/room-route'));
+		this.app.use(this.pathPromotion, require('../routes/promotion-route'));
 	}
 
 	listen() {
