@@ -9,7 +9,7 @@ const router = Router();
 router.post(
 	'/',
 	[
-		validateJWT,
+		//validateJWT,
 		check('name', 'nombre obligatorio').not().isEmpty(),
 		check('lastName', 'apellido obligatorio').not().isEmpty(),
 		check('typeDocument').isIn(['CC', 'PA', 'TI', 'CE']),
@@ -18,8 +18,6 @@ router.post(
 		check('birthdate', 'fecha de nacimiento obligatorio').not().isEmpty(),
 		check('phoneNumber', 'número celular es obligatorio').not().isEmpty(),
 		check('email', 'correo electronico no válido').isEmail(),
-		check('position', 'cargo obligatorio').not().isEmpty(),
-		check('roleSender', 'Rol no válido').isIn(['super-admin', 'administrador']),
 		validateFields,
 	],
 	createEmployee
