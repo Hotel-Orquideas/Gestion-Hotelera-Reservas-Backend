@@ -9,7 +9,7 @@ const router = Router();
 router.post(
 	'/',
 	[
-		validateJWT,
+		//validateJWT,
 		check('description', 'descripción obligatoria').not().isEmpty(),
 		check('percentage', 'porcentaje obligatorio').not().isEmpty(),
 		check('expirationDate', 'fecha de vencimiento obligatorio').not().isEmpty(),

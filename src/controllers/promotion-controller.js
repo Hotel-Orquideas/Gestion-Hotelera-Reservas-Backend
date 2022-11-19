@@ -24,68 +24,43 @@ const createPromotion = async (req = request, res = response) => {
 
 const getPromotion = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const result = await prisma.rate.findUnique({
+	const result = await prisma.promotion.findUnique({
 		where: {
 			id,
-		},
-		select: {
-			id: true,
-			name: true,
-			value: true,
-			roomType: {
-				select: {
-					id: false,
-					name: true,
-					numMaxGuests: true,
-				},
-			},
 		},
 	});
 	res.json(result);
 };
 
 const getAllPromotions = async (req = request, res = response) => {
-	const results = await prisma.rate.findMany({
-		select: {
-			id: true,
-			name: true,
-			value: true,
-			roomType: {
-				select: {
-					id: false,
-					name: true,
-					numMaxGuests: true,
-				},
-			},
-		},
-	});
+	const results = await prisma.promotion.findMany({});
 	res.json(results);
 	console.log(results);
 };
 
 const updatePromotion = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const { roomTypeId, ...toUpdate } = req.body;
+	const { companyId, ...toUpdate } = req.body;
 
-	const result = await prisma.rate.update({
+	const result = await prisma.promotion.update({
 		where: {
 			id,
 		},
 		data: toUpdate,
 	});
 	res.json({
-		msg: 'Rate updated sucessfull!',
+		msg: 'Promotion updated sucessfull!',
 		result,
 	});
 };
 
 const deletePromotion = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const result = await prisma.rate.delete({
+	const result = await prisma.promotion.delete({
 		where: { id },
 	});
 	res.json({
-		msg: 'Rate delete sucessfull!',
+		msg: 'Promotion delete sucessfull!',
 		result,
 	});
 };
