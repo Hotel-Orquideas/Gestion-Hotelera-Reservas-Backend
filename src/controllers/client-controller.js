@@ -148,8 +148,8 @@ const getAllClients = async (req = request, res = response) => {
 
 const updateClient = async (req = request, res = response) => {
 	const document = req.params.doc;
-	const { position, ...toUpdate } = req.body;
-	const employee = await prisma.employee.findFirst({
+	const { dateIssuanceDoc, countryOrigin, countryDestination, cityOrigin, cityDestination, profession, ...toUpdate } = req.body;
+	const client = await prisma.client.findFirst({
 		where: {
 			person: {
 				document,
@@ -157,23 +157,32 @@ const updateClient = async (req = request, res = response) => {
 		},
 	});
 
-	const { id } = employee;
+	const { id } = client;
 
-	const result = await prisma.employee.update({
+	const result = await prisma.client.update({
 		where: {
 			id,
 		},
 		data: {
-			position,
+			dateIssuanceDoc,
+			countryOrigin,
+			countryDestination,
+			cityOrigin,
+			cityDestination,
+			profession,
 			person: {
 				update: toUpdate,
 			},
 		},
 		select: {
 			id: true,
-			position: true,
+			dateIssuanceDoc: true,
+			countryOrigin: true,
+			countryDestination: true,
+			cityOrigin: true,
+			cityDestination: true,
+			profession: true,
 			state: true,
-			roleId: false,
 			hotelId: false,
 			person: {
 				select: {
@@ -189,11 +198,6 @@ const updateClient = async (req = request, res = response) => {
 					bloodType: true,
 				},
 			},
-			role: {
-				select: {
-					name: true,
-				},
-			},
 			hotel: {
 				select: {
 					name: true,
@@ -202,14 +206,14 @@ const updateClient = async (req = request, res = response) => {
 		},
 	});
 	res.json({
-		msg: 'Employee updated sucessfull!',
+		msg: 'Client updated sucessfull!',
 		result,
 	});
 };
 
 const deleteClient = async (req = request, res = response) => {
 	const document = req.params.doc;
-	const employee = await prisma.employee.findFirst({
+	const client = await prisma.client.findFirst({
 		where: {
 			person: {
 				document,
@@ -217,16 +221,16 @@ const deleteClient = async (req = request, res = response) => {
 		},
 	});
 
-	const { id } = employee;
+	const { id } = client;
 
-	const result = await prisma.employee.update({
+	const result = await prisma.client.update({
 		where: { id },
 		data: {
 			state: 'D',
 		},
 	});
 	res.json({
-		msg: 'Employee delete sucessfull!',
+		msg: 'Client delete sucessfull!',
 		result,
 	});
 };
