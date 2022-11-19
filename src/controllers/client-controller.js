@@ -100,22 +100,26 @@ const getClient = async (req = request, res = response) => {
 };
 
 const getAllClients = async (req = request, res = response) => {
-	const results = await prisma.employee.findMany({
-		where: {
-			OR: [
-				{
-					state: 'A',
-				},
-				{
-					state: 'B',
-				},
-			],
-		},
+	const results = await prisma.client.findMany({
+		// where: {
+		// 	OR: [
+		// 		{
+		// 			state: 'A',
+		// 		},
+		// 		{
+		// 			state: 'B',
+		// 		},
+		// 	],
+		// },
 		select: {
 			id: true,
-			position: true,
+			dateIssuanceDoc: true,
+			countryOrigin: true,
+			countryDestination: true,
+			cityOrigin: true,
+			cityDestination: true,
+			profession: true,
 			state: true,
-			roleId: false,
 			hotelId: false,
 			person: {
 				select: {
@@ -129,11 +133,6 @@ const getAllClients = async (req = request, res = response) => {
 					phoneNumber: true,
 					email: true,
 					bloodType: true,
-				},
-			},
-			role: {
-				select: {
-					name: true,
 				},
 			},
 			hotel: {
