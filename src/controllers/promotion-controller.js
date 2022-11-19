@@ -38,6 +38,16 @@ const getAllPromotions = async (req = request, res = response) => {
 	console.log(results);
 };
 
+const getPromotionByCompany = async (req = request, res = response) => {
+	const id = parseInt(req.params.id);
+	const results = await prisma.promotion.findMany({
+		where: {
+			companyId: id,
+		},
+	});
+	res.json(results);
+};
+
 const updatePromotion = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const { companyId, ...toUpdate } = req.body;
@@ -69,6 +79,7 @@ module.exports = {
 	createPromotion,
 	getPromotion,
 	getAllPromotions,
+	getPromotionByCompany,
 	updatePromotion,
 	deletePromotion,
 	prisma,
