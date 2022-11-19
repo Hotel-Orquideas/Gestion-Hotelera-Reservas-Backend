@@ -12,6 +12,7 @@ class Server {
 		this.pathRoomType = '/management/api/roomType';
 		this.pathRate = '/management/api/rate';
 		this.pathRoom = '/management/api/room';
+		
 		this.middleware();
 		this.routes();
 	}

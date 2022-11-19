@@ -19,13 +19,15 @@ router.post(
 		check('phoneNumber', 'número celular es obligatorio').not().isEmpty(),
 		check('email', 'correo electronico no válido').isEmail(),
 		check('position', 'cargo obligatorio').not().isEmpty(),
-		check('roleSender', 'Rol no válido').isIn(['SuperAdministrador', 'Administrador']),
+		check('roleSender', 'Rol no válido').isIn(['super-admin', 'administrador']),
 		validateFields,
 	],
 	createEmployee
 );
 
 router.get('/:doc', [validateJWT], getEmployee);
+
+router.get('/filterById/:id', [validateJWT], getEmployeeById);
 
 router.get('/', [validateJWT], getAllEmployees);
 
