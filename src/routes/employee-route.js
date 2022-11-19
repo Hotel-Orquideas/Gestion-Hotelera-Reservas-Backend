@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validate-fields');
-const { createEmployee, getEmployee, getAllEmployees, updateEmployee, deleteEmployee } = require('../controllers/employee-controller');
+const { createEmployee, getEmployee, getAllEmployees, updateEmployee, deleteEmployee, getEmployeeById } = require('../controllers/employee-controller');
 const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
@@ -27,7 +27,7 @@ router.post(
 
 router.get('/:doc', [validateJWT], getEmployee);
 
-router.get('/filterById/:id', [validateJWT], getEmployeeById);
+router.get('/filterById/:id', getEmployeeById);
 
 router.get('/', [validateJWT], getAllEmployees);
 

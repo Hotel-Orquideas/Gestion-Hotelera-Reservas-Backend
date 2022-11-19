@@ -100,7 +100,7 @@ const getEmployeeById = async (req = request, res = response) => {
 	const id = req.params.id;
 	const result = await prisma.employee.findFirst({
 		where: {
-			id,
+			id: parseInt(id),
 		},
 		select: {
 			id: true,
@@ -273,6 +273,7 @@ const deleteEmployee = async (req = request, res = response) => {
 module.exports = {
 	createEmployee,
 	getEmployee,
+	getEmployeeById,
 	getAllEmployees,
 	updateEmployee,
 	deleteEmployee,
