@@ -65,8 +65,11 @@ CREATE TABLE `Roles` (
 -- CreateTable
 CREATE TABLE `Clients` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `country` VARCHAR(50) NOT NULL,
-    `city` VARCHAR(50) NOT NULL,
+    `date_issuance_doc` DATETIME(3) NOT NULL,
+    `country_origin` VARCHAR(50) NOT NULL,
+    `country_destination` VARCHAR(50) NOT NULL,
+    `city_origin` VARCHAR(50) NOT NULL,
+    `city_destination` VARCHAR(50) NOT NULL,
     `profession` VARCHAR(50) NOT NULL,
     `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'A',
     `person_id` INTEGER NOT NULL,

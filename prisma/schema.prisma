@@ -77,17 +77,20 @@ model Role {
 }
 
 model Client {
-  id            Int             @id @default(autoincrement())
-  country       String          @db.VarChar(50)
-  city          String          @db.VarChar(50)
-  profession    String          @db.VarChar(50)
-  state         StateEntity     @default(A)
-  personId      Int             @map("person_id")
-  hotelId       Int             @map("hotel_id")
-  hotel         Hotel           @relation(fields: [hotelId], references: [id])
-  person        Person          @relation(fields: [personId], references: [id])
-  booking       Booking[]
-  clientCompany ClientCompany[]
+  id                 Int             @id @default(autoincrement())
+  dateIssuanceDoc    DateTime        @map("date_issuance_doc")
+  countryOrigin      String          @map("country_origin") @db.VarChar(50)
+  countryDestination String          @map("country_destination") @db.VarChar(50)
+  cityOrigin         String          @map("city_origin") @db.VarChar(50)
+  cityDestination    String          @map("city_destination") @db.VarChar(50)
+  profession         String          @db.VarChar(50)
+  state              StateEntity     @default(A)
+  personId           Int             @map("person_id")
+  hotelId            Int             @map("hotel_id")
+  hotel              Hotel           @relation(fields: [hotelId], references: [id])
+  person             Person          @relation(fields: [personId], references: [id])
+  booking            Booking[]
+  clientCompany      ClientCompany[]
 
   @@map("Clients")
 }

@@ -97,6 +97,47 @@ const getEmployee = async (req = request, res = response) => {
 	res.json(result);
 };
 
+const getEmployeeById = async (req = request, res = response) => {
+	const id = req.params.id;
+	const result = await prisma.employee.findFirst({
+		where: {
+			id: parseInt(id),
+		},
+		select: {
+			id: true,
+			position: true,
+			state: true,
+			roleId: false,
+			hotelId: false,
+			person: {
+				select: {
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
+				},
+			},
+			role: {
+				select: {
+					name: true,
+				},
+			},
+			hotel: {
+				select: {
+					name: true,
+				},
+			},
+		},
+	});
+	res.json(result);
+};
+
 const getAllEmployees = async (req = request, res = response) => {
 	const results = await prisma.employee.findMany({
 		where: {
@@ -234,6 +275,7 @@ const deleteEmployee = async (req = request, res = response) => {
 module.exports = {
 	createEmployee,
 	getEmployee,
+	getEmployeeById,
 	getAllEmployees,
 	updateEmployee,
 	deleteEmployee,
