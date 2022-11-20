@@ -90,7 +90,7 @@ model Client {
   hotel              Hotel           @relation(fields: [hotelId], references: [id])
   person             Person          @relation(fields: [personId], references: [id])
   booking            Booking[]
-  clientCompany      ClientCompany[]
+  clientCompany      ClientCompany[] 
 
   @@map("Clients")
 }

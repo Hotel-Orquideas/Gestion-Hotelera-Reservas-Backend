@@ -14,6 +14,7 @@ class Server {
 		this.pathRoom = '/management/api/room';
 		this.pathPromotion = '/management/api/promotion';
 		this.pathClient = '/management/api/client';
+		this.pathClientCompany = '/management/api/clientCompany';
 		this.middleware();
 		this.routes();
 	}
@@ -33,6 +34,7 @@ class Server {
 		this.app.use(this.pathRoom, require('../routes/room-route'));
 		this.app.use(this.pathPromotion, require('../routes/promotion-route'));
 		this.app.use(this.pathClient, require('../routes/client-route'));
+		this.app.use(this.pathClientCompany, require('../routes/client-company-route'));
 	}
 
 	listen() {
