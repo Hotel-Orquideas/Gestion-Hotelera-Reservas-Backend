@@ -64,7 +64,7 @@ const getAllRates = async (req = request, res = response) => {
 
 const updateRate = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
-	const { roomTypeId, ...toUpdate } = req.body;
+	const { ...toUpdate } = req.body;
 
 	const result = await prisma.rate.update({
 		where: {

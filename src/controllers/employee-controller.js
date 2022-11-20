@@ -53,6 +53,7 @@ const createEmployee = async (req = request, res = response) => {
 	console.log('Empleado creado exitosamente!');
 };
 
+
 const getEmployee = async (req = request, res = response) => {
 	const document = req.params.doc;
 	const result = await prisma.employee.findFirst({
@@ -146,7 +147,7 @@ const getAllEmployees = async (req = request, res = response) => {
 
 const updateEmployee = async (req = request, res = response) => {
 	const document = req.params.doc;
-	const { position, ...toUpdate } = req.body;
+	const { position, state, ...toUpdate } = req.body;
 	const employee = await prisma.employee.findFirst({
 		where: {
 			person: {
@@ -163,6 +164,7 @@ const updateEmployee = async (req = request, res = response) => {
 		},
 		data: {
 			position,
+			state,
 			person: {
 				update: toUpdate,
 			},
