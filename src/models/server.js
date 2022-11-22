@@ -15,6 +15,8 @@ class Server {
 		this.pathPromotion = '/management/api/promotion';
 		this.pathClient = '/management/api/client';
 		this.pathClientCompany = '/management/api/clientCompany';
+		this.pathBooking = '/management/api/booking';
+		this.pathPaymentMethod = '/management/api/paymentMethod';
 		this.middleware();
 		this.routes();
 	}
@@ -35,6 +37,8 @@ class Server {
 		this.app.use(this.pathPromotion, require('../routes/promotion-route'));
 		this.app.use(this.pathClient, require('../routes/client-route'));
 		this.app.use(this.pathClientCompany, require('../routes/client-company-route'));
+		this.app.use(this.pathBooking, require('../routes/booking-route'));
+		this.app.use(this.pathPaymentMethod, require('../routes/payment-method-route'));
 	}
 
 	listen() {

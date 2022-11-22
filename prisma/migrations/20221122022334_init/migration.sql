@@ -224,6 +224,14 @@ CREATE TABLE `Booking_rates` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Booking_clients` (
+    `client_id` INTEGER NOT NULL,
+    `booking_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`client_id`, `booking_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Employees` ADD CONSTRAINT `Employees_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -298,3 +306,9 @@ ALTER TABLE `Booking_rates` ADD CONSTRAINT `Booking_rates_bill_id_fkey` FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE `Booking_rates` ADD CONSTRAINT `Booking_rates_booking_room_booking_id_booking_room_room_id_fkey` FOREIGN KEY (`booking_room_booking_id`, `booking_room_room_id`) REFERENCES `Booking_rooms`(`booking_id`, `room_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Booking_clients` ADD CONSTRAINT `Booking_clients_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Booking_clients` ADD CONSTRAINT `Booking_clients_booking_id_fkey` FOREIGN KEY (`booking_id`) REFERENCES `Bookings`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

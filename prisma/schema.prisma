@@ -90,7 +90,8 @@ model Client {
   hotel              Hotel           @relation(fields: [hotelId], references: [id])
   person             Person          @relation(fields: [personId], references: [id])
   booking            Booking[]
-  clientCompany      ClientCompany[] 
+  clientCompany      ClientCompany[]
+  BookingClient      BookingClient[]
 
   @@map("Clients")
 }
@@ -222,15 +223,16 @@ model RoomService {
 }
 
 model Booking {
-  id           Int           @id @default(autoincrement())
-  checkInDate  DateTime      @map("check_in_date") @db.DateTime(0)
-  checkOutDate DateTime      @map("check_out_date") @db.DateTime(0)
-  details      String        @db.VarChar(255)
-  hotelId      Int           @map("hotel_id")
-  clientId     Int           @map("client_id")
-  client       Client        @relation(fields: [clientId], references: [id])
-  hotel        Hotel         @relation(fields: [hotelId], references: [id])
-  bookingRoom  BookingRoom[]
+  id            Int             @id @default(autoincrement())
+  checkInDate   DateTime        @map("check_in_date") @db.DateTime(0)
+  checkOutDate  DateTime        @map("check_out_date") @db.DateTime(0)
+  details       String          @db.VarChar(255)
+  hotelId       Int             @map("hotel_id")
+  clientId      Int             @map("client_id")
+  client        Client          @relation(fields: [clientId], references: [id])
+  hotel         Hotel           @relation(fields: [hotelId], references: [id])
+  bookingRoom   BookingRoom[]
+  BookingClient BookingClient[]
 
   @@map("Bookings")
 }
@@ -257,6 +259,16 @@ model BookingRate {
   bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
 
   @@map("Booking_rates")
+}
+
+model BookingClient {
+  clientId  Int     @map("client_id")
+  bookingId Int     @map("booking_id")
+  client    Client  @relation(fields: [clientId], references: [id])
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
+  @@id([clientId, bookingId])
+  @@map("Booking_clients")
 }
 
 enum TypeDocument {
