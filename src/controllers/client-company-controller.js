@@ -29,7 +29,7 @@ const createLinkClientCompany = async (req = request, res = response) => {
 };
 
 const getAllClients = async (req = request, res = response) => {
-	const id = req.params.id;
+	const id = parseInt(req.params.id);
 	const result = await prisma.clientCompany.findMany({
 		where: {
 			companyId: id,
@@ -70,9 +70,7 @@ const getAllClients = async (req = request, res = response) => {
 		},
 	});
 
-	res.json({
-		result,
-	});
+	res.json(result);
 };
 
 module.exports = {
