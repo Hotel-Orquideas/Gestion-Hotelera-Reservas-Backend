@@ -71,27 +71,7 @@ const updateBooking = async (req = request, res = response) => {
 };
 
 const deleteBooking = async (req = request, res = response) => {
-	const document = req.params.doc;
-	const client = await prisma.client.findFirst({
-		where: {
-			person: {
-				document,
-			},
-		},
-	});
-
-	const { id } = client;
-
-	const result = await prisma.client.update({
-		where: { id },
-		data: {
-			state: 'D',
-		},
-	});
-	res.json({
-		msg: 'Client delete sucessfull!',
-		result,
-	});
+	//ToDo
 };
 
 module.exports = {
