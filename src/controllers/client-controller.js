@@ -101,16 +101,16 @@ const getClient = async (req = request, res = response) => {
 
 const getAllClients = async (req = request, res = response) => {
 	const results = await prisma.client.findMany({
-		// where: {
-		// 	OR: [
-		// 		{
-		// 			state: 'A',
-		// 		},
-		// 		{
-		// 			state: 'B',
-		// 		},
-		// 	],
-		// },
+		where: {
+			OR: [
+				{
+					state: 'A',
+				},
+				{
+					state: 'B',
+				},
+			],
+		},
 		select: {
 			id: true,
 			dateIssuanceDoc: true,
