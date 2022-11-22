@@ -73,43 +73,17 @@ const getAllClients = async (req = request, res = response) => {
 	res.json(result);
 };
 
-const updateLinkClient = async (req = request, res = response) => {
+const deleteLinkClient = async (req = request, res = response) => {
+	const companyId = req.params.companyId;
 	const clientId = req.params.clientId;
-	const { companyIdOld, companyIdNew } = req.body;
 
-	if (!companyIdNew) {
-		const linkRemoved = await prisma.clientCompany.delete({
-			where: {
-				clientId_companyId: parseInt(clientId + companyIdOld),
-			},
-		});
-		res.json({
-			msg: 'Enlace borrado exitosamente!',
-			linkRemoved,
-		});
-	}
-
-	const existCompany = await prisma.clientCompany.findFirst({
+	const result = await prisma.clientCompany.delete({
 		where: {
-			companyId: companyIdNew,
-		},
-	});
-
-	if (!existCompany) {
-		res.json({
-			msg: 'Empresa no existente',
-		});
-	}
-	const result = await prisma.clientCompany.update({
-		where: {
-			clientId_companyId: parseInt(clientId + companyIdOld),
-		},
-		data: {
-			companyId: companyIdNew,
+			clientId_companyId: parseInt(clientId + companyId),
 		},
 	});
 	res.json({
-		msg: 'Link updated sucessfull!',
+		msg: 'Link deleted sucessfull!',
 		result,
 	});
 };
@@ -117,5 +91,5 @@ const updateLinkClient = async (req = request, res = response) => {
 module.exports = {
 	createLinkClientCompany,
 	getAllClients,
-	updateLinkClient,
+	deleteLinkClient,
 };
