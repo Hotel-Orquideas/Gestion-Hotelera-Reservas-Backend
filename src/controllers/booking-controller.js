@@ -38,113 +38,34 @@ const getBooking = async (req = request, res = response) => {
 };
 
 const getAllBookings = async (req = request, res = response) => {
-	const results = await prisma.client.findMany({
-		where: {
-			OR: [
-				{
-					state: 'A',
-				},
-				{
-					state: 'B',
-				},
-			],
-		},
-		select: {
-			id: true,
-			dateIssuanceDoc: true,
-			countryOrigin: true,
-			countryDestination: true,
-			cityOrigin: true,
-			cityDestination: true,
-			profession: true,
-			state: true,
-			hotelId: false,
-			person: {
-				select: {
-					id: true,
-					name: true,
-					lastName: true,
-					typeDocument: true,
-					document: true,
-					genre: true,
-					birthdate: true,
-					phoneNumber: true,
-					email: true,
-					bloodType: true,
-				},
-			},
-			hotel: {
-				select: {
-					name: true,
-				},
-			},
-		},
+	const results = await prisma.booking.findMany({
+		// where: {
+		// 	OR: [
+		// 		{
+		// 			state: 'A',
+		// 		},
+		// 		{
+		// 			state: 'B',
+		// 		},
+		// 	],
+		// },
 	});
 	res.json(results);
 	console.log(results);
 };
 
 const updateBooking = async (req = request, res = response) => {
-	const document = req.params.doc;
-	const { dateIssuanceDoc, countryOrigin, countryDestination, cityOrigin, cityDestination, profession, ...toUpdate } = req.body;
-	const client = await prisma.client.findFirst({
-		where: {
-			person: {
-				document,
-			},
-		},
-	});
+	const id = parseInt(req.params.id);
+	const { ...toUpdate } = req.body;
 
-	const { id } = client;
-
-	const result = await prisma.client.update({
+	const result = await prisma.booking.update({
 		where: {
 			id,
 		},
-		data: {
-			dateIssuanceDoc,
-			countryOrigin,
-			countryDestination,
-			cityOrigin,
-			cityDestination,
-			profession,
-			person: {
-				update: toUpdate,
-			},
-		},
-		select: {
-			id: true,
-			dateIssuanceDoc: true,
-			countryOrigin: true,
-			countryDestination: true,
-			cityOrigin: true,
-			cityDestination: true,
-			profession: true,
-			state: true,
-			hotelId: false,
-			person: {
-				select: {
-					id: true,
-					name: true,
-					lastName: true,
-					typeDocument: true,
-					document: true,
-					genre: true,
-					birthdate: true,
-					phoneNumber: true,
-					email: true,
-					bloodType: true,
-				},
-			},
-			hotel: {
-				select: {
-					name: true,
-				},
-			},
-		},
+		data: toUpdate,
 	});
 	res.json({
-		msg: 'Client updated sucessfull!',
+		msg: 'Booking updated sucessfull!',
 		result,
 	});
 };
