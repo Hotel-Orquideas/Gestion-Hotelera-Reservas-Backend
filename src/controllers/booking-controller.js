@@ -71,7 +71,14 @@ const updateBooking = async (req = request, res = response) => {
 };
 
 const deleteBooking = async (req = request, res = response) => {
-	//ToDo
+	const id = parseInt(req.params.id);
+	const result = await prisma.booking.delete({
+		where: { id },
+	});
+	res.json({
+		msg: 'Booking deleted successfull!',
+		result,
+	});
 };
 
 module.exports = {
