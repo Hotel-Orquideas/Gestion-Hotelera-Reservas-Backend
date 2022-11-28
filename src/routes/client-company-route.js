@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/:companyId/:clientId', createLinkClientCompany);
 
-router.get('/:id', getAllClients);
+router.get('/:nit', getAllClients);
 
 router.delete('/:clientId', deleteLinkClient);
 
