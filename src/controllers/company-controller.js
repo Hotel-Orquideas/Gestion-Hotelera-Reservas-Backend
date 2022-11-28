@@ -48,6 +48,34 @@ const getAllCompanies = async (req = request, res = response) => {
 	console.log(results);
 };
 
+// obtener todos los empleados asociados a una empresa
+const getEmployeeByCompany = async (req = request, res = response) => {
+	const id = req.params.id;
+	const result = await prisma.clientCompany.findMany({
+		where: {
+			companyId: id,
+		},
+		select: {
+			client: {
+				select: {
+					
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
+				},
+			},
+		},
+	});
+	res.json(result);
+};
+
 const updateCompany = async (req = request, res = response) => {
 	const nit = req.params.nit;
 	const { ...toUpdate } = req.body;
