@@ -20,11 +20,11 @@ CREATE TABLE `Persons` (
     `last_name` VARCHAR(100) NOT NULL,
     `type_document` ENUM('CC', 'PA', 'TI', 'CE') NOT NULL DEFAULT 'CC',
     `document` VARCHAR(100) NOT NULL,
-    `genre` ENUM('M', 'F', 'O') NOT NULL,
-    `birthdate` DATE NOT NULL,
+    `genre` ENUM('M', 'F', 'O') NULL,
+    `birthdate` DATE NULL,
     `phone_number` VARCHAR(30) NOT NULL,
-    `email` VARCHAR(50) NOT NULL,
-    `blood_type` VARCHAR(4) NOT NULL,
+    `email` VARCHAR(50) NULL,
+    `blood_type` VARCHAR(4) NULL,
 
     UNIQUE INDEX `Persons_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -65,12 +65,12 @@ CREATE TABLE `Roles` (
 -- CreateTable
 CREATE TABLE `Clients` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `date_issuance_doc` DATETIME(3) NOT NULL,
-    `country_origin` VARCHAR(50) NOT NULL,
-    `country_destination` VARCHAR(50) NOT NULL,
-    `city_origin` VARCHAR(50) NOT NULL,
-    `city_destination` VARCHAR(50) NOT NULL,
-    `profession` VARCHAR(50) NOT NULL,
+    `date_issuance_doc` DATETIME(3) NULL,
+    `country_origin` VARCHAR(50) NULL,
+    `country_destination` VARCHAR(50) NULL,
+    `city_origin` VARCHAR(50) NULL,
+    `city_destination` VARCHAR(50) NULL,
+    `profession` VARCHAR(50) NULL,
     `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'A',
     `person_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
@@ -124,7 +124,20 @@ CREATE TABLE `Payment_methods` (
 CREATE TABLE `Bills` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `date` DATE NOT NULL,
+    `total` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
+    `client_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Bill_details` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `description` VARCHAR(100) NOT NULL,
+    `date` DATETIME NOT NULL,
+    `value` INTEGER NOT NULL,
+    `bill_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -186,7 +199,6 @@ CREATE TABLE `Room_services` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `quantity` INTEGER NOT NULL,
     `service_id` INTEGER NOT NULL,
-    `bill_id` INTEGER NOT NULL,
     `booking_room_booking_id` INTEGER NOT NULL,
     `booking_room_room_id` INTEGER NOT NULL,
 
@@ -200,7 +212,7 @@ CREATE TABLE `Bookings` (
     `check_out_date` DATETIME(0) NOT NULL,
     `details` VARCHAR(255) NOT NULL,
     `hotel_id` INTEGER NOT NULL,
-    `client_id` INTEGER NOT NULL,
+    `company_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -263,6 +275,12 @@ ALTER TABLE `Promotions` ADD CONSTRAINT `Promotions_company_id_fkey` FOREIGN KEY
 ALTER TABLE `Bills` ADD CONSTRAINT `Bills_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Bills` ADD CONSTRAINT `Bills_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Bill_details` ADD CONSTRAINT `Bill_details_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Payments_history` ADD CONSTRAINT `Payments_history_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -281,19 +299,16 @@ ALTER TABLE `Rooms` ADD CONSTRAINT `Rooms_room_type_id_fkey` FOREIGN KEY (`room_
 ALTER TABLE `Services` ADD CONSTRAINT `Services_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_booking_room_booking_id_booking_room_room_id_fkey` FOREIGN KEY (`booking_room_booking_id`, `booking_room_room_id`) REFERENCES `Booking_rooms`(`booking_id`, `room_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Room_services` ADD CONSTRAINT `Room_services_service_id_fkey` FOREIGN KEY (`service_id`) REFERENCES `Services`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_company_id_fkey` FOREIGN KEY (`company_id`) REFERENCES `Companies`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Booking_rooms` ADD CONSTRAINT `Booking_rooms_booking_id_fkey` FOREIGN KEY (`booking_id`) REFERENCES `Bookings`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

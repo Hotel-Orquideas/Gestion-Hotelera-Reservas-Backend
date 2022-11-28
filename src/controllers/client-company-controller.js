@@ -37,15 +37,6 @@ const getAllClients = async (req = request, res = response) => {
 		select: {
 			client: {
 				select: {
-					id: true,
-					dateIssuanceDoc: true,
-					countryOrigin: true,
-					countryDestination: true,
-					cityOrigin: true,
-					cityDestination: true,
-					profession: true,
-					state: true,
-					hotelId: false,
 					person: {
 						select: {
 							id: true,
@@ -58,11 +49,6 @@ const getAllClients = async (req = request, res = response) => {
 							phoneNumber: true,
 							email: true,
 							bloodType: true,
-						},
-					},
-					hotel: {
-						select: {
-							name: true,
 						},
 					},
 				},

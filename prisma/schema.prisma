@@ -31,11 +31,11 @@ model Person {
   lastName     String       @map("last_name") @db.VarChar(100)
   typeDocument TypeDocument @default(CC) @map("type_document")
   document     String       @db.VarChar(100)
-  genre        Genre
-  birthdate    DateTime     @db.Date
+  genre        Genre?
+  birthdate    DateTime?    @db.Date
   phoneNumber  String       @map("phone_number") @db.VarChar(30)
-  email        String       @unique @db.VarChar(50)
-  bloodType    String       @map("blood_type") @db.VarChar(4)
+  email        String?      @unique @db.VarChar(50)
+  bloodType    String?      @map("blood_type") @db.VarChar(4)
   client       Client[]
   employee     Employee[]
 
@@ -78,20 +78,20 @@ model Role {
 
 model Client {
   id                 Int             @id @default(autoincrement())
-  dateIssuanceDoc    DateTime        @map("date_issuance_doc")
-  countryOrigin      String          @map("country_origin") @db.VarChar(50)
-  countryDestination String          @map("country_destination") @db.VarChar(50)
-  cityOrigin         String          @map("city_origin") @db.VarChar(50)
-  cityDestination    String          @map("city_destination") @db.VarChar(50)
-  profession         String          @db.VarChar(50)
+  dateIssuanceDoc    DateTime?       @map("date_issuance_doc")
+  countryOrigin      String?         @map("country_origin") @db.VarChar(50)
+  countryDestination String?         @map("country_destination") @db.VarChar(50)
+  cityOrigin         String?         @map("city_origin") @db.VarChar(50)
+  cityDestination    String?         @map("city_destination") @db.VarChar(50)
+  profession         String?         @db.VarChar(50)
   state              StateEntity     @default(A)
   personId           Int             @map("person_id")
   hotelId            Int             @map("hotel_id")
   hotel              Hotel           @relation(fields: [hotelId], references: [id])
   person             Person          @relation(fields: [personId], references: [id])
-  booking            Booking[]
   clientCompany      ClientCompany[]
   BookingClient      BookingClient[]
+  Bill               Bill[]
 
   @@map("Clients")
 }
@@ -106,6 +106,7 @@ model Company {
   state         StateEntity     @default(A)
   clientCompany ClientCompany[]
   promotion     Promotion[]
+  Booking       Booking[]
 
   @@map("Companies")
 }
@@ -142,13 +143,27 @@ model PaymentMethod {
 model Bill {
   id             Int              @id @default(autoincrement())
   date           DateTime         @db.Date
+  total          Int              @db.Int
   hotelId        Int              @map("hotel_id")
+  clientId       Int              @map("client_id")
   hotel          Hotel            @relation(fields: [hotelId], references: [id])
+  client         Client           @relation(fields: [clientId], references: [id])
   BookingRate    BookingRate[]
   paymentHistory PaymentHistory[]
-  roomService    RoomService[]
+  BillDetail     BillDetail[]
 
   @@map("Bills")
+}
+
+model BillDetail {
+  id          Int      @id @default(autoincrement())
+  description String   @db.VarChar(100)
+  date        DateTime @db.DateTime()
+  value       Int      @db.Int
+  billId      Int      @map("bill_id")
+  bill        Bill     @relation(fields: [billId], references: [id])
+
+  @@map("Bill_details")
 }
 
 model PaymentHistory {
@@ -212,10 +227,8 @@ model RoomService {
   id                   Int         @id @default(autoincrement())
   quantity             Int
   serviceId            Int         @map("service_id")
-  billId               Int         @map("bill_id")
   bookingRoomBookingId Int         @map("booking_room_booking_id")
   bookingRoomRoomId    Int         @map("booking_room_room_id")
-  bil                  Bill        @relation(fields: [billId], references: [id])
   bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
   service              Service     @relation(fields: [serviceId], references: [id])
 
@@ -228,9 +241,9 @@ model Booking {
   checkOutDate  DateTime        @map("check_out_date") @db.DateTime(0)
   details       String          @db.VarChar(255)
   hotelId       Int             @map("hotel_id")
-  clientId      Int             @map("client_id")
-  client        Client          @relation(fields: [clientId], references: [id])
+  companyId     Int?            @map("company_id")
   hotel         Hotel           @relation(fields: [hotelId], references: [id])
+  company       Company?        @relation(fields: [companyId], references: [id])
   bookingRoom   BookingRoom[]
   BookingClient BookingClient[]
 
@@ -285,9 +298,9 @@ enum Genre {
 }
 
 enum StateRoom {
-  A
-  M
-  O
+  A //Available
+  M //Maintenence
+  O //OutServive
 }
 
 enum StateEntity {

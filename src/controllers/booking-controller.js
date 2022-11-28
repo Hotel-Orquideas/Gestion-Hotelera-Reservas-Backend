@@ -54,6 +54,8 @@ const getAllBookings = async (req = request, res = response) => {
 	console.log(results);
 };
 
+//obtener reservas disponibles
+
 const updateBooking = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const { ...toUpdate } = req.body;
