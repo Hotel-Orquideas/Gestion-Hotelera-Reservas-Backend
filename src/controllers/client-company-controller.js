@@ -29,7 +29,7 @@ const createLinkClientCompany = async (req = request, res = response) => {
 };
 
 const getAllClients = async (req = request, res = response) => {
-	const nit = parseInt(req.params.nit);
+	const nit = req.params.nit;
 	const result = await prisma.clientCompany.findMany({
 		where: {
 			company: {
