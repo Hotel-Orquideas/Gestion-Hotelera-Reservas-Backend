@@ -42,7 +42,7 @@ const createBooking = async (req = request, res = response) => {
 		});
 	}
 
-	if (!clientId) {
+	if (!clientId || !isNaN(clientId)) {
 		result = await prisma.booking.create({
 			data: {
 				checkInDate,
