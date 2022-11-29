@@ -84,7 +84,7 @@ model Client {
   cityOrigin         String?         @map("city_origin") @db.VarChar(50)
   cityDestination    String?         @map("city_destination") @db.VarChar(50)
   profession         String?         @db.VarChar(50)
-  state              StateEntity     @default(A)
+  state              StateEntity     @default(I)
   personId           Int             @map("person_id")
   hotelId            Int             @map("hotel_id")
   hotel              Hotel           @relation(fields: [hotelId], references: [id])
@@ -148,7 +148,6 @@ model Bill {
   clientId       Int              @map("client_id")
   hotel          Hotel            @relation(fields: [hotelId], references: [id])
   client         Client           @relation(fields: [clientId], references: [id])
-  BookingRate    BookingRate[]
   paymentHistory PaymentHistory[]
   BillDetail     BillDetail[]
 
@@ -240,6 +239,7 @@ model Booking {
   checkInDate   DateTime        @map("check_in_date") @db.DateTime(0)
   checkOutDate  DateTime        @map("check_out_date") @db.DateTime(0)
   details       String          @db.VarChar(255)
+  state         StateBooking    @default(A)
   hotelId       Int             @map("hotel_id")
   companyId     Int?            @map("company_id")
   hotel         Hotel           @relation(fields: [hotelId], references: [id])
@@ -256,22 +256,10 @@ model BookingRoom {
   discount    Int?
   booking     Booking       @relation(fields: [bookingId], references: [id])
   room        Room          @relation(fields: [roomId], references: [id])
-  bookingRate BookingRate[]
   roomService RoomService[]
 
   @@id([bookingId, roomId])
   @@map("Booking_rooms")
-}
-
-model BookingRate {
-  id                   Int         @id @default(autoincrement())
-  billId               Int         @map("bill_id")
-  bookingRoomBookingId Int         @map("booking_room_booking_id")
-  bookingRoomRoomId    Int         @map("booking_room_room_id")
-  bill                 Bill        @relation(fields: [billId], references: [id])
-  bookingRoom          BookingRoom @relation(fields: [bookingRoomBookingId, bookingRoomRoomId], references: [bookingId, roomId])
-
-  @@map("Booking_rates")
 }
 
 model BookingClient {
@@ -308,4 +296,9 @@ enum StateEntity {
   B // Block
   D // Delete
   I // Inactive
+}
+
+enum StateBooking {
+  A // Active
+  C // Canceled
 }

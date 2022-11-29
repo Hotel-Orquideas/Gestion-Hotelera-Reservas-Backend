@@ -71,7 +71,7 @@ CREATE TABLE `Clients` (
     `city_origin` VARCHAR(50) NULL,
     `city_destination` VARCHAR(50) NULL,
     `profession` VARCHAR(50) NULL,
-    `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'A',
+    `state` ENUM('A', 'B', 'D', 'I') NOT NULL DEFAULT 'I',
     `person_id` INTEGER NOT NULL,
     `hotel_id` INTEGER NOT NULL,
 
@@ -211,6 +211,7 @@ CREATE TABLE `Bookings` (
     `check_in_date` DATETIME(0) NOT NULL,
     `check_out_date` DATETIME(0) NOT NULL,
     `details` VARCHAR(255) NOT NULL,
+    `state` ENUM('A', 'C') NOT NULL DEFAULT 'A',
     `hotel_id` INTEGER NOT NULL,
     `company_id` INTEGER NULL,
 
@@ -224,16 +225,6 @@ CREATE TABLE `Booking_rooms` (
     `discount` INTEGER NULL,
 
     PRIMARY KEY (`booking_id`, `room_id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Booking_rates` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `bill_id` INTEGER NOT NULL,
-    `booking_room_booking_id` INTEGER NOT NULL,
-    `booking_room_room_id` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -315,12 +306,6 @@ ALTER TABLE `Booking_rooms` ADD CONSTRAINT `Booking_rooms_booking_id_fkey` FOREI
 
 -- AddForeignKey
 ALTER TABLE `Booking_rooms` ADD CONSTRAINT `Booking_rooms_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `Rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Booking_rates` ADD CONSTRAINT `Booking_rates_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Booking_rates` ADD CONSTRAINT `Booking_rates_booking_room_booking_id_booking_room_room_id_fkey` FOREIGN KEY (`booking_room_booking_id`, `booking_room_room_id`) REFERENCES `Booking_rooms`(`booking_id`, `room_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Booking_clients` ADD CONSTRAINT `Booking_clients_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
