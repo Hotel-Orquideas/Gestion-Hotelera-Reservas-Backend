@@ -57,6 +57,18 @@ const createClient = async (req = request, res = response) => {
 	console.log('Cliente creado exitosamente!');
 };
 
+const createManyClients = async (req = request, res = response) => {
+	const clients = req.body;
+	const result = await prisma.bookingClient.createMany({
+		data: clients,
+		skipDuplicates: true,
+	});
+	res.json({
+		msg: 'clients created successfull!',
+		result,
+	});
+};
+
 const getClient = async (req = request, res = response) => {
 	const document = req.params.doc;
 	const result = await prisma.client.findFirst({
@@ -109,6 +121,9 @@ const getAllClients = async (req = request, res = response) => {
 				{
 					state: 'B',
 				},
+				{
+					state: 'I',
+				},
 			],
 		},
 		select: {
@@ -145,6 +160,8 @@ const getAllClients = async (req = request, res = response) => {
 	res.json(results);
 	console.log(results);
 };
+
+// hacer un put con cambio de estado a 'A'
 
 const updateClient = async (req = request, res = response) => {
 	const document = req.params.doc;
@@ -241,6 +258,6 @@ module.exports = {
 	getAllClients,
 	updateClient,
 	deleteClient,
-
+	createManyClients,
 	prisma,
 };

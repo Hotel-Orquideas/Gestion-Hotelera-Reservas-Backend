@@ -57,17 +57,47 @@ const getAllBookings = async (req = request, res = response) => {
 //obtener reservas disponibles
 const getBookingsAvailable = async (req = request, res = response) => {
 	const { startDate, endDate } = req.body;
-	const result = await prisma.booking.findMany({
+	const myBookings = await prisma.booking.findMany({
 		where: {
 			OR: [
 				{
 					checkInDate: {
 						lte: endDate,
 					},
+					checkOutDate: {
+						gte: startDate,
+					},
+				},
+				{
+					checkInDate: {
+						gte: startDate,
+					},
+					checkOutDate: {
+						lte: endDate,
+					},
+				},
+			],
+			AND: [
+				{
+					state: 'A',
 				},
 			],
 		},
 	});
+
+	const myArray = myBookings.forEach((booking) => {
+		myArray.push(booking.id);
+	});
+
+	const myBookingRooms = await prisma.bookingRoom.findMany({
+		where: {
+			bookingId: {
+				notIn: [myArray],
+			},
+		},
+	});
+
+	res.json(myBookingRooms);
 };
 
 const updateBooking = async (req = request, res = response) => {
