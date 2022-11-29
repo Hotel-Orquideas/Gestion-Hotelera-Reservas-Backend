@@ -42,8 +42,8 @@ router.get(
 	getAllClients
 );
 
-router.put('/:doc', [validateJWT], updateClient);
+router.put('/:doc', updateClient);
 
-router.patch('/:doc', [validateJWT], deleteClient);
+router.patch('/:doc', deleteClient);
 
 module.exports = router;
