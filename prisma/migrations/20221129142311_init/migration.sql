@@ -214,6 +214,7 @@ CREATE TABLE `Bookings` (
     `state` ENUM('A', 'C') NOT NULL DEFAULT 'A',
     `hotel_id` INTEGER NOT NULL,
     `company_id` INTEGER NULL,
+    `client_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -300,6 +301,9 @@ ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_hotel_id_fkey` FOREIGN KEY (`hot
 
 -- AddForeignKey
 ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_company_id_fkey` FOREIGN KEY (`company_id`) REFERENCES `Companies`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Bookings` ADD CONSTRAINT `Bookings_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Booking_rooms` ADD CONSTRAINT `Booking_rooms_booking_id_fkey` FOREIGN KEY (`booking_id`) REFERENCES `Bookings`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -4,7 +4,7 @@ const { request, response } = require('express');
 let prisma = new PrismaClient();
 
 const createBooking = async (req = request, res = response) => {
-	const { checkInDate, checkOutDate, details, clientId, hotelId } = req.body;
+	const { checkInDate, checkOutDate, details, hotelId, companyId, clientId } = req.body;
 
 	const result = await prisma.booking.create({
 		data: {
@@ -13,6 +13,9 @@ const createBooking = async (req = request, res = response) => {
 			details,
 			hotel: {
 				connect: { id: parseInt(hotelId) },
+			},
+			company: {
+				connect: { id: parseInt(companyId) },
 			},
 			client: {
 				connect: { id: parseInt(clientId) },
