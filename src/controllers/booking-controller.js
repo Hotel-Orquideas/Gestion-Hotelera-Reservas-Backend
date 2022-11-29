@@ -7,7 +7,7 @@ const createBooking = async (req = request, res = response) => {
 	const { checkInDate, checkOutDate, details, hotelId, companyId, clientId } = req.body;
 	let result = '';
 
-	if (!(companyId && clientId) || !isNaN(companyId) || !isNaN(clientId)) {
+	if (!(companyId && clientId) || (companyId == undefined && clientId == undefined)) {
 		result = await prisma.booking.create({
 			data: {
 				checkInDate,
@@ -23,7 +23,7 @@ const createBooking = async (req = request, res = response) => {
 		});
 	}
 
-	if (!companyId) {
+	if (companyId && cl) {
 		result = await prisma.booking.create({
 			data: {
 				checkInDate,
@@ -42,7 +42,7 @@ const createBooking = async (req = request, res = response) => {
 		});
 	}
 
-	if (!clientId || !isNaN(clientId)) {
+	if (clientId == '' || !isNaN(clientId) || clientId == null) {
 		result = await prisma.booking.create({
 			data: {
 				checkInDate,
