@@ -12,24 +12,24 @@ const linkClientsWithBooking = async (req = request, res = response) => {
 	});
 
 	let myIds = [];
-	clientDocs.forEach((element) => {
+	clientDocs.forEach(async (element) => {
 		const clientId = await prisma.client.findFirst({
-			where:{
-				person:{ document:element.document}
+			where: {
+				person: { document: element.document },
 			},
-			select:{
-				id:true
-			}
+			select: {
+				id: true,
+			},
 		});
 		myIds.push(clientId);
 	});
 
-	myIds.forEach(element => {
+	myIds.forEach(async (element) => {
 		const result = await prisma.bookingClient.create({
-			data:{
-				bookingId:id,
-				clientId:element,
-			}
+			data: {
+				bookingId: id,
+				clientId: element,
+			},
 		});
 		console.log(result);
 	});
