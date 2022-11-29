@@ -92,6 +92,7 @@ model Client {
   clientCompany      ClientCompany[]
   BookingClient      BookingClient[]
   Bill               Bill[]
+  Booking            Booking[]
 
   @@map("Clients")
 }
@@ -242,8 +243,10 @@ model Booking {
   state         StateBooking    @default(A)
   hotelId       Int             @map("hotel_id")
   companyId     Int?            @map("company_id")
+  clientId      Int?            @map("client_id")
   hotel         Hotel           @relation(fields: [hotelId], references: [id])
   company       Company?        @relation(fields: [companyId], references: [id])
+  client        Client?         @relation(fields: [clientId], references: [id])
   bookingRoom   BookingRoom[]
   BookingClient BookingClient[]
 
