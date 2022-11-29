@@ -59,8 +59,8 @@ const createClient = async (req = request, res = response) => {
 
 const createManyClients = async (req = request, res = response) => {
 	const clients = req.body;
-	const result = await prisma.bookingClient.createMany({
-		data: clients,
+	const result = await prisma.person.createMany({
+		data: {},
 		skipDuplicates: true,
 	});
 	res.json({

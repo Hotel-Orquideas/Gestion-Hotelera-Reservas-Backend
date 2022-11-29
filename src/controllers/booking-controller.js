@@ -5,23 +5,61 @@ let prisma = new PrismaClient();
 
 const createBooking = async (req = request, res = response) => {
 	const { checkInDate, checkOutDate, details, hotelId, companyId, clientId } = req.body;
+	let result = '';
 
-	const result = await prisma.booking.create({
-		data: {
-			checkInDate,
-			checkOutDate,
-			details,
-			hotel: {
-				connect: { id: parseInt(hotelId) },
+	if (!(companyId && clientId)) {
+		result = await prisma.booking.create({
+			data: {
+				checkInDate,
+				checkOutDate,
+				details,
+				hotel: {
+					connect: { id: parseInt(hotelId) },
+				},
 			},
-			company: {
-				connect: { id: parseInt(companyId) },
+			select: {
+				id: true,
 			},
-			client: {
-				connect: { id: parseInt(clientId) },
+		});
+	}
+
+	if (!companyId) {
+		result = await prisma.booking.create({
+			data: {
+				checkInDate,
+				checkOutDate,
+				details,
+				hotel: {
+					connect: { id: parseInt(hotelId) },
+				},
+				client: {
+					connect: { id: parseInt(clientId) },
+				},
 			},
-		},
-	});
+			select: {
+				id: true,
+			},
+		});
+	}
+
+	if (!clientId) {
+		result = await prisma.booking.create({
+			data: {
+				checkInDate,
+				checkOutDate,
+				details,
+				hotel: {
+					connect: { id: parseInt(hotelId) },
+				},
+				company: {
+					connect: { id: parseInt(companyId) },
+				},
+			},
+			select: {
+				id: true,
+			},
+		});
+	}
 
 	res.json({
 		msg: 'Booking create sucessfull!',
