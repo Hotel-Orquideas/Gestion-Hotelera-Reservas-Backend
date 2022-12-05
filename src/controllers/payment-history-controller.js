@@ -9,8 +9,8 @@ const createPaymentHistory = async (req = request, res = response) => {
 		data: {
 			valueToPay,
 			dateOfPay: new Date(Date.now()).toISOString(),
-			bill: { connect: { billId } },
-			paymentMethod: { connect: { id: paymentMethodId } },
+			bill: { connect: { id: parseInt(billId) } },
+			paymentMethod: { connect: { id: parseInt(paymentMethodId) } },
 		},
 	});
 	res.json({

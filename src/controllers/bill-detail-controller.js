@@ -4,7 +4,7 @@ const { request, response } = require('express');
 let prisma = new PrismaClient();
 
 const createBillDetail = async (req = request, res = response) => {
-	const id = req.params.id;
+	const id = parseInt(req.params.id);
 	const { description, value } = req.body;
 	const result = await prisma.billDetail.create({
 		data: {

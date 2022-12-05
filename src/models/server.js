@@ -22,6 +22,7 @@ class Server {
 		this.pathBills = '/management/api/bill';
 		this.pathBillDetails = '/management/api/billDetail';
 		this.pathPaymentHistory = '/management/api/paymentHistory';
+		this.pathRoomServices = '/management/api/roomService';
 		this.middleware();
 		this.routes();
 	}
@@ -49,6 +50,7 @@ class Server {
 		this.app.use(this.pathBills, require('../routes/bill-route'));
 		this.app.use(this.pathBillDetails, require('../routes/bill-detail-route'));
 		this.app.use(this.pathPaymentHistory, require('../routes/payment-history-route'));
+		this.app.use(this.pathRoomServices, require('../routes/room-service-route'));
 	}
 
 	listen() {
