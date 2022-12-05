@@ -292,6 +292,25 @@ const updateClient = async (req = request, res = response) => {
 	});
 };
 
+const chageStateClient = async (req = request, res = response) => {
+	let idClients = req.body;
+	idClients = JSON.stringify(idClients);
+	let parsedJson = JSON.parse(idClients);
+	parsedJson.forEach(async (element) => {
+		const result = await prisma.client.update({
+			where: { id: parseInt(element.id) },
+			data: {
+				state: 'I',
+			},
+		});
+		console.log(result);
+	});
+
+	res.json({
+		msg: 'States changed successfully by I',
+	});
+};
+
 const deleteClient = async (req = request, res = response) => {
 	const document = req.params.doc;
 	const client = await prisma.client.findFirst({
@@ -322,6 +341,7 @@ module.exports = {
 	getAllClients,
 	completeInfoClient,
 	updateClient,
+	chageStateClient,
 	deleteClient,
 	createManyClients,
 	prisma,
