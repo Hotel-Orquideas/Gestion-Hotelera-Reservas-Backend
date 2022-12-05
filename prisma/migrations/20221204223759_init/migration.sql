@@ -125,8 +125,11 @@ CREATE TABLE `Bills` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `date` DATE NOT NULL,
     `total` INTEGER NOT NULL,
+    `balance_due` INTEGER NOT NULL,
+    `state` ENUM('O', 'C') NOT NULL DEFAULT 'O',
     `hotel_id` INTEGER NOT NULL,
-    `client_id` INTEGER NOT NULL,
+    `client_id` INTEGER NULL,
+    `company_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -147,7 +150,6 @@ CREATE TABLE `Payments_history` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `value_to_pay` INTEGER NOT NULL,
     `date_of_pay` DATE NOT NULL,
-    `balance_due` INTEGER NOT NULL,
     `bill_id` INTEGER NOT NULL,
     `payment_method_id` INTEGER NOT NULL,
 
@@ -211,7 +213,7 @@ CREATE TABLE `Bookings` (
     `check_in_date` DATETIME(0) NOT NULL,
     `check_out_date` DATETIME(0) NOT NULL,
     `details` VARCHAR(255) NOT NULL,
-    `state` ENUM('A', 'C') NOT NULL DEFAULT 'A',
+    `state` ENUM('A', 'B', 'C') NOT NULL DEFAULT 'A',
     `hotel_id` INTEGER NOT NULL,
     `company_id` INTEGER NULL,
     `client_id` INTEGER NULL,
@@ -234,6 +236,15 @@ CREATE TABLE `Booking_clients` (
     `booking_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`client_id`, `booking_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Audit_logs` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `description` VARCHAR(255) NOT NULL,
+    `timestamp` DATETIME NOT NULL,
+
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
@@ -267,7 +278,10 @@ ALTER TABLE `Promotions` ADD CONSTRAINT `Promotions_company_id_fkey` FOREIGN KEY
 ALTER TABLE `Bills` ADD CONSTRAINT `Bills_hotel_id_fkey` FOREIGN KEY (`hotel_id`) REFERENCES `Hotels`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Bills` ADD CONSTRAINT `Bills_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Bills` ADD CONSTRAINT `Bills_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `Clients`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Bills` ADD CONSTRAINT `Bills_company_id_fkey` FOREIGN KEY (`company_id`) REFERENCES `Companies`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Bill_details` ADD CONSTRAINT `Bill_details_bill_id_fkey` FOREIGN KEY (`bill_id`) REFERENCES `Bills`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

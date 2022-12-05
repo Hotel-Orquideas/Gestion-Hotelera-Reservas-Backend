@@ -7,42 +7,42 @@ const createBooking = async (req = request, res = response) => {
 	const { checkInDate, checkOutDate, details, hotelId, companyId, clientId } = req.body;
 	let result = '';
 
-	if (!(companyId && clientId) || (companyId == undefined && clientId == undefined)) {
-		result = await prisma.booking.create({
-			data: {
-				checkInDate,
-				checkOutDate,
-				details,
-				hotel: {
-					connect: { id: parseInt(hotelId) },
-				},
-			},
-			select: {
-				id: true,
-			},
-		});
-	}
+	// if (!(companyId && clientId) || (companyId == undefined && clientId == undefined)) {
+	// 	result = await prisma.booking.create({
+	// 		data: {
+	// 			checkInDate,
+	// 			checkOutDate,
+	// 			details,
+	// 			hotel: {
+	// 				connect: { id: parseInt(hotelId) },
+	// 			},
+	// 		},
+	// 		select: {
+	// 			id: true,
+	// 		},
+	// 	});
+	// }
 
-	if (companyId && cl) {
-		result = await prisma.booking.create({
-			data: {
-				checkInDate,
-				checkOutDate,
-				details,
-				hotel: {
-					connect: { id: parseInt(hotelId) },
-				},
-				client: {
-					connect: { id: parseInt(clientId) },
-				},
-			},
-			select: {
-				id: true,
-			},
-		});
-	}
+	// if (companyId && (!clientId || clientId == undefined)) {
+	// 	result = await prisma.booking.create({
+	// 		data: {
+	// 			checkInDate,
+	// 			checkOutDate,
+	// 			details,
+	// 			hotel: {
+	// 				connect: { id: parseInt(hotelId) },
+	// 			},
+	// 			client: {
+	// 				connect: { id: parseInt(clientId) },
+	// 			},
+	// 		},
+	// 		select: {
+	// 			id: true,
+	// 		},
+	// 	});
+	// }
 
-	if (clientId == '' || !isNaN(clientId) || clientId == null) {
+	if (clientId == '' || !isNaN(clientId) || clientId == null || clientId == undefined) {
 		result = await prisma.booking.create({
 			data: {
 				checkInDate,
