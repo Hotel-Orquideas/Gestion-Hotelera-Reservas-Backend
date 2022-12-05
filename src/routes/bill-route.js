@@ -1,16 +1,14 @@
 const { Router } = require('express');
-const { createBill } = require('../controllers/bill-controller');
+const { getBillById, getAllBills, updateBill, updateState } = require('../controllers/bill-controller');
 
 const router = Router();
 
-router.post('/', createBill);
+router.get('/:id', getBillById);
 
-router.get('/:id');
+router.get('/', getAllBills);
 
-router.get('/');
+router.put('/:id', updateBill);
 
-router.put('/:id');
-
-router.patch('/:id');
+router.put('/state/:id', updateState);
 
 module.exports = router;
