@@ -19,6 +19,7 @@ class Server {
 		this.pathPaymentMethod = '/management/api/paymentMethod';
 		this.pathBookingClients = '/management/api/bookingClient';
 		this.pathBookingRooms = '/management/api/bookingRoom';
+		this.pathBills = '/management/api/bill';
 		this.middleware();
 		this.routes();
 	}
@@ -43,6 +44,7 @@ class Server {
 		this.app.use(this.pathPaymentMethod, require('../routes/payment-method-route'));
 		this.app.use(this.pathBookingClients, require('../routes/booking-client-route'));
 		this.app.use(this.pathBookingRooms, require('../routes/booking-room-route'));
+		this.app.use(this.pathBills, require('../routes/bill-route'));
 	}
 
 	listen() {
