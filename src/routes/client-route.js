@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createClient, getClient, getAllClients, updateClient, deleteClient, createManyClients } = require('../controllers/client-controller');
+const { createClient, getClient, getAllClients, updateClient, deleteClient, createManyClients, completeInfoClient } = require('../controllers/client-controller');
 const { validateFields } = require('../middlewares/validate-fields');
 const { validateJWT } = require('../middlewares/validate-jwt');
 
@@ -43,6 +43,8 @@ router.get(
 	//[validateJWT],
 	getAllClients
 );
+
+router.put('/completeInfo/:doc', completeInfoClient);
 
 router.put('/:doc', [validateJWT], updateClient);
 

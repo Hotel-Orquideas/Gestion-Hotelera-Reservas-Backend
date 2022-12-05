@@ -62,7 +62,7 @@ const linkClientsWithBooking = async (req = request, res = response) => {
 };
 
 const getAllBookingsClients = async (req = request, res = response) => {
-	const id = req.params.id;
+	const id = parseInt(req.params.id);
 	const result = await prisma.bookingClient.findMany({
 		where: { bookingId: id },
 		select: {
@@ -71,6 +71,7 @@ const getAllBookingsClients = async (req = request, res = response) => {
 					cityOrigin: true,
 					cityDestination: true,
 					profession: true,
+					state: true,
 					person: {
 						select: {
 							id: true,
@@ -89,9 +90,7 @@ const getAllBookingsClients = async (req = request, res = response) => {
 			},
 		},
 	});
-	res.json({
-		result,
-	});
+	res.json(result);
 };
 
 module.exports = {

@@ -161,7 +161,71 @@ const getAllClients = async (req = request, res = response) => {
 	console.log(results);
 };
 
-// hacer un put con cambio de estado a 'A'
+const completeInfoClient = async (req = request, res = response) => {
+	const document = req.params.doc;
+	const { dateIssuanceDoc, countryOrigin, countryDestination, cityOrigin, cityDestination, profession, ...toUpdate } = req.body;
+	const client = await prisma.client.findFirst({
+		where: {
+			person: {
+				document,
+			},
+		},
+	});
+
+	const { id } = client;
+
+	const result = await prisma.client.update({
+		where: {
+			id,
+		},
+		data: {
+			dateIssuanceDoc,
+			countryOrigin,
+			countryDestination,
+			cityOrigin,
+			cityDestination,
+			profession,
+			state: 'A',
+			person: {
+				update: toUpdate,
+			},
+		},
+		select: {
+			id: true,
+			dateIssuanceDoc: true,
+			countryOrigin: true,
+			countryDestination: true,
+			cityOrigin: true,
+			cityDestination: true,
+			profession: true,
+			state: true,
+			hotelId: false,
+			person: {
+				select: {
+					id: true,
+					name: true,
+					lastName: true,
+					typeDocument: true,
+					document: true,
+					genre: true,
+					birthdate: true,
+					phoneNumber: true,
+					email: true,
+					bloodType: true,
+				},
+			},
+			hotel: {
+				select: {
+					name: true,
+				},
+			},
+		},
+	});
+	res.json({
+		msg: 'Info client completed sucessfully!',
+		result,
+	});
+};
 
 const updateClient = async (req = request, res = response) => {
 	const document = req.params.doc;
@@ -256,6 +320,7 @@ module.exports = {
 	createClient,
 	getClient,
 	getAllClients,
+	completeInfoClient,
 	updateClient,
 	deleteClient,
 	createManyClients,

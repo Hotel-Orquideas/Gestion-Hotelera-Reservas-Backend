@@ -5,6 +5,6 @@ const router = Router();
 
 router.post('/:id', linkClientsWithBooking);
 
-router.get('/id', getAllBookingsClients);
+router.get('/:id', getAllBookingsClients);
 
 module.exports = router;
