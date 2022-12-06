@@ -3,7 +3,7 @@ const { createPaymentHistory, getPaymentHistoryById, getAllPaymentHistories, upd
 
 const router = Router();
 
-router.post('/', createPaymentHistory);
+router.post('/:id', createPaymentHistory);
 
 router.get('/:id', getPaymentHistoryById);
 
