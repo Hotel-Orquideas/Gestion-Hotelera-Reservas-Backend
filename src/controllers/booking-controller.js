@@ -22,6 +22,7 @@ const createBooking = async (req = request, res = response) => {
 			},
 		});
 	}
+	/*
 
 	if (companyId && cl) {
 		result = await prisma.booking.create({
@@ -60,6 +61,7 @@ const createBooking = async (req = request, res = response) => {
 			},
 		});
 	}
+	*/
 
 	res.json({
 		msg: 'Booking create sucessfull!',
