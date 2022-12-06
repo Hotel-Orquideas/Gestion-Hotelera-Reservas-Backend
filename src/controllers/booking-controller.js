@@ -4,9 +4,9 @@ const { request, response } = require('express');
 let prisma = new PrismaClient();
 
 const createBooking = async (req = request, res = response) => {
-	const { checkInDate, checkOutDate, details, hotelId, companyId, clientId } = req.body;
-	let result = '';
+	const { checkInDate, checkOutDate, details, total, balanceDue, description, value, hotelId, companyId, clientId } = req.body;
 
+<<<<<<< HEAD
 	if (!(companyId && clientId) || (companyId == undefined && clientId == undefined)) {
 		result = await prisma.booking.create({
 			data: {
@@ -26,6 +26,10 @@ const createBooking = async (req = request, res = response) => {
 
 	if (companyId && cl) {
 		result = await prisma.booking.create({
+=======
+	if (clientId != '') {
+		const booking = await prisma.booking.create({
+>>>>>>> 2728f79a8af95b873d5569a5d930004ab53cc7b7
 			data: {
 				checkInDate,
 				checkOutDate,
@@ -41,10 +45,46 @@ const createBooking = async (req = request, res = response) => {
 				id: true,
 			},
 		});
-	}
 
-	if (clientId == '' || !isNaN(clientId) || clientId == null) {
-		result = await prisma.booking.create({
+		const billDetail = await prisma.billDetail.create({
+			data: {
+				description,
+				date: new Date(Date.now()).toISOString(),
+				value,
+				bill: {
+					create: {
+						date: new Date(Date.now()).toISOString(),
+						total,
+						balanceDue,
+						client: { connect: { id: parseInt(clientId) } },
+						hotel: { connect: { id: parseInt(hotelId) } },
+					},
+				},
+			},
+			select: {
+				bill: {
+					select: {
+						id: true,
+						date: true,
+						total: true,
+						balanceDue: true,
+						hotel: { select: { name: true } },
+						client: { select: { person: { select: { document: true, name: true, lastName: true } } } },
+					},
+				},
+				description: true,
+				date: true,
+				value: true,
+			},
+		});
+
+		res.json({
+			msg: 'Booking create sucessfully! - client',
+			booking,
+			billDetail,
+		});
+	} else if (companyId != '') {
+		const booking = await prisma.booking.create({
 			data: {
 				checkInDate,
 				checkOutDate,
@@ -60,14 +100,50 @@ const createBooking = async (req = request, res = response) => {
 				id: true,
 			},
 		});
+<<<<<<< HEAD
 	}
 	*/
+=======
+>>>>>>> 2728f79a8af95b873d5569a5d930004ab53cc7b7
 
-	res.json({
-		msg: 'Booking create sucessfull!',
-		result,
-	});
-	console.log('Reserva creada exitosamente!');
+		const billDetail = await prisma.billDetail.create({
+			data: {
+				description,
+				date: new Date(Date.now()).toISOString(),
+				value,
+				bill: {
+					create: {
+						date: new Date(Date.now()).toISOString(),
+						total,
+						balanceDue,
+						company: { connect: { id: parseInt(companyId) } },
+						hotel: { connect: { id: parseInt(hotelId) } },
+					},
+				},
+			},
+			select: {
+				bill: {
+					select: {
+						id: true,
+						date: true,
+						total: true,
+						balanceDue: true,
+						hotel: { select: { name: true } },
+						company: { select: { nit: true, name: true, legalAgent: true } },
+					},
+				},
+				description: true,
+				date: true,
+				value: true,
+			},
+		});
+
+		res.json({
+			msg: 'Booking create sucessfully! - company',
+			booking,
+			billDetail,
+		});
+	}
 };
 
 const getBooking = async (req = request, res = response) => {

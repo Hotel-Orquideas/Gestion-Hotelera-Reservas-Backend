@@ -108,6 +108,7 @@ model Company {
   clientCompany ClientCompany[]
   promotion     Promotion[]
   Booking       Booking[]
+  Bill          Bill[]
 
   @@map("Companies")
 }
@@ -145,10 +146,14 @@ model Bill {
   id             Int              @id @default(autoincrement())
   date           DateTime         @db.Date
   total          Int              @db.Int
+  balanceDue     Int              @map("balance_due")
+  state          StateBill        @default(O)
   hotelId        Int              @map("hotel_id")
-  clientId       Int              @map("client_id")
+  clientId       Int?             @map("client_id")
+  companyId      Int?             @map("company_id")
   hotel          Hotel            @relation(fields: [hotelId], references: [id])
-  client         Client           @relation(fields: [clientId], references: [id])
+  client         Client?          @relation(fields: [clientId], references: [id])
+  company        Company?         @relation(fields: [companyId], references: [id])
   paymentHistory PaymentHistory[]
   BillDetail     BillDetail[]
 
@@ -170,7 +175,6 @@ model PaymentHistory {
   id              Int           @id @default(autoincrement())
   valueToPay      Int           @map("value_to_pay")
   dateOfPay       DateTime      @map("date_of_pay") @db.Date
-  balanceDue      Int           @map("balance_due")
   billId          Int           @map("bill_id")
   paymentMethodId Int           @map("payment_method_id")
   bill            Bill          @relation(fields: [billId], references: [id])
@@ -275,6 +279,14 @@ model BookingClient {
   @@map("Booking_clients")
 }
 
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  description String   @db.VarChar(255)
+  timestamp   DateTime @db.DateTime()
+
+  @@map("Audit_logs")
+}
+
 enum TypeDocument {
   CC
   PA
@@ -303,5 +315,11 @@ enum StateEntity {
 
 enum StateBooking {
   A // Active
+  B // Booked
   C // Canceled
+}
+
+enum StateBill {
+  O // Open
+  C // Close
 }

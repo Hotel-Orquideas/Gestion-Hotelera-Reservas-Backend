@@ -1,6 +1,15 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createClient, getClient, getAllClients, updateClient, deleteClient, createManyClients } = require('../controllers/client-controller');
+const {
+	createClient,
+	getClient,
+	getAllClients,
+	updateClient,
+	deleteClient,
+	createManyClients,
+	completeInfoClient,
+	chageStateClient,
+} = require('../controllers/client-controller');
 const { validateFields } = require('../middlewares/validate-fields');
 const { validateJWT } = require('../middlewares/validate-jwt');
 
@@ -44,8 +53,12 @@ router.get(
 	getAllClients
 );
 
-router.put('/:doc', updateClient);
+router.put('/completeInfo/:doc', completeInfoClient);
 
-router.patch('/:doc', deleteClient);
+router.put('/:doc', [validateJWT], updateClient);
+
+router.put('/changeState', chageStateClient);
+
+router.patch('/:doc', [validateJWT], deleteClient);
 
 module.exports = router;
