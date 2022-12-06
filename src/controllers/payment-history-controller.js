@@ -4,12 +4,13 @@ const { request, response } = require('express');
 let prisma = new PrismaClient();
 
 const createPaymentHistory = async (req = request, res = response) => {
-	const { valueToPay, billId, paymentMethodId } = req.body;
+	const id = parseInt(req.params.id);
+	const { valueToPay, paymentMethodId } = req.body;
 	const result = await prisma.paymentHistory.create({
 		data: {
 			valueToPay,
 			dateOfPay: new Date(Date.now()).toISOString(),
-			bill: { connect: { id: parseInt(billId) } },
+			bill: { connect: { id } },
 			paymentMethod: { connect: { id: parseInt(paymentMethodId) } },
 		},
 	});
