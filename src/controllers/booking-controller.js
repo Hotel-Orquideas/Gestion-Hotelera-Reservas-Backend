@@ -6,30 +6,8 @@ let prisma = new PrismaClient();
 const createBooking = async (req = request, res = response) => {
 	const { checkInDate, checkOutDate, details, total, balanceDue, description, value, hotelId, companyId, clientId } = req.body;
 
-<<<<<<< HEAD
-	if (!(companyId && clientId) || (companyId == undefined && clientId == undefined)) {
-		result = await prisma.booking.create({
-			data: {
-				checkInDate,
-				checkOutDate,
-				details,
-				hotel: {
-					connect: { id: parseInt(hotelId) },
-				},
-			},
-			select: {
-				id: true,
-			},
-		});
-	}
-	/*
-
-	if (companyId && cl) {
-		result = await prisma.booking.create({
-=======
 	if (clientId != '') {
 		const booking = await prisma.booking.create({
->>>>>>> 2728f79a8af95b873d5569a5d930004ab53cc7b7
 			data: {
 				checkInDate,
 				checkOutDate,
@@ -100,11 +78,6 @@ const createBooking = async (req = request, res = response) => {
 				id: true,
 			},
 		});
-<<<<<<< HEAD
-	}
-	*/
-=======
->>>>>>> 2728f79a8af95b873d5569a5d930004ab53cc7b7
 
 		const billDetail = await prisma.billDetail.create({
 			data: {
