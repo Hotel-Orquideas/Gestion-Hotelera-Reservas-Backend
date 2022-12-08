@@ -4,7 +4,7 @@ const { request, response } = require('express');
 let prisma = new PrismaClient();
 
 const createBooking = async (req = request, res = response) => {
-	const { checkInDate, checkOutDate, details, total, balanceDue, description, value, hotelId, companyId, clientId } = req.body;
+	const { checkInDate, checkOutDate, details, total, description, value, hotelId, companyId, clientId } = req.body;
 
 	if (clientId != '') {
 		const booking = await prisma.booking.create({
@@ -33,7 +33,7 @@ const createBooking = async (req = request, res = response) => {
 					create: {
 						date: new Date(Date.now()).toISOString(),
 						total,
-						balanceDue,
+						balanceDue:total,
 						client: { connect: { id: parseInt(clientId) } },
 						hotel: { connect: { id: parseInt(hotelId) } },
 					},
@@ -141,6 +141,26 @@ const getAllBookings = async (req = request, res = response) => {
 		// 		},
 		// 	],
 		// },
+		select:{
+			company:{
+				select:{
+					id:true,
+					nit:true,
+					name:true
+				}
+			},
+			client:{
+				select:{
+					id:true,
+					person:{
+						name:true,
+						lastName:true,
+						document:true,
+						phoneNumber:true
+					}
+				}
+			}
+		}
 	});
 	res.json(results);
 	console.log(results);
@@ -208,6 +228,43 @@ const updateBooking = async (req = request, res = response) => {
 	});
 };
 
+const updateState = async (req = request, res = response) => {
+	const id = parseInt(req.params.id);
+	const state = req.params.state;
+
+	if (state === 'A') {
+		const result = await prisma.booking.update({
+			where: {
+				id,
+			},
+			data:{
+				state:'B'
+			}
+		});
+
+		res.json({
+			msg: 'Booking updated sucessfull!',
+			result,
+		});
+	}else if (state === 'B'){
+		const result = await prisma.booking.update({
+			where: {
+				id,
+			},
+			data:{
+				state:'C'
+			}
+		});
+
+		res.json({
+			msg: 'Booking updated sucessfull!',
+			result,
+		});
+	}
+};
+
+
+
 const deleteBooking = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const result = await prisma.booking.delete({
@@ -224,6 +281,7 @@ module.exports = {
 	getBooking,
 	getAllBookings,
 	updateBooking,
+	updateState,
 	deleteBooking,
 	prisma,
 };

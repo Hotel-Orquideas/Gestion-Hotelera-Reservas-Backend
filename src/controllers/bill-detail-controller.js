@@ -25,7 +25,7 @@ const getBillDetailById = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const result = await prisma.billDetail.findUnique({
 		where: {
-			id,
+			billId:id,
 		},
 	});
 	res.json(result);
