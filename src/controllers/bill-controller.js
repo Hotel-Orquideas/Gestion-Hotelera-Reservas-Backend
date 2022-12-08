@@ -77,6 +77,32 @@ const getAllBills = async (req = request, res = response) => {
 		// 		},
 		// 	],
 		// },
+		select:{
+			date:true,
+			total:true,
+			balanceDue:true,
+			hotelId:false,
+			companyId:false,
+			clientId:false,
+			company:{
+				select:{
+					id:true,
+					nit:true,
+					name:true
+				}
+			},
+			client:{
+				select:{
+					id:true,
+					person:{
+						name:true,
+						lastName:true,
+						document:true,
+						phoneNumber:true
+					}
+				}
+			}
+		}
 	});
 	res.json(results);
 };
