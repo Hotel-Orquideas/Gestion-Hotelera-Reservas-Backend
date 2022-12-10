@@ -15,13 +15,16 @@ const createBillDetail = async (req = request, res = response) => {
 		},
 	});
 
-	const myBill = prisma.bill.findUnique({
+	const myBill = await prisma.bill.findUnique({
 		where:{ id }
 	});
 
 	const { total, balanceDue } = myBill;
 
-	const toUpdate = prisma.bill.update({
+	const toUpdate = await prisma.bill.update({
+		where:{
+			id
+		},
 		data:{ 
 			total: parseInt(total + value),
 			balanceDue: parseInt(balanceDue + value)
