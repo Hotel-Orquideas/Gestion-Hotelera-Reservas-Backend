@@ -14,6 +14,22 @@ const createBillDetail = async (req = request, res = response) => {
 			bill: { connect: { id } },
 		},
 	});
+
+	const myBill = prisma.bill.findUnique({
+		where:{ id }
+	});
+
+	const { total, balanceDue } = myBill;
+
+	const toUpdate = prisma.bill.update({
+		data:{ 
+			total: parseInt(total + value),
+			balanceDue: parseInt(balanceDue + value)
+		}
+	});
+
+	console.log(toUpdate);
+
 	res.json({
 		msg: 'Bill detail create sucessfull!',
 		result,
