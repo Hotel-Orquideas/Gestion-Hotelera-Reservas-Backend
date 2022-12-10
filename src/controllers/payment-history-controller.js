@@ -14,6 +14,24 @@ const createPaymentHistory = async (req = request, res = response) => {
 			paymentMethod: { connect: { id: parseInt(paymentMethodId) } },
 		},
 	});
+
+	const myBill = await prisma.bill.findUnique({
+		where:{ id }
+	});
+
+	const { balanceDue } = myBill;
+
+	const toUpdate = await prisma.bill.update({
+		where:{
+			id
+		},
+		data:{ 
+			balanceDue: parseInt(balanceDue - valueToPay)
+		}
+	});
+
+	console.log(toUpdate);
+
 	res.json({
 		msg: 'Payment history create sucessfull!',
 		result,
