@@ -60,7 +60,7 @@ const createClient = async (req = request, res = response) => {
 const createManyClients = async (req = request, res = response) => {
 	const clients = req.body;
 	const result = await prisma.person.createMany({
-		data: {clients},
+		data:{clients},
 		skipDuplicates: true,
 	});
 	res.json({

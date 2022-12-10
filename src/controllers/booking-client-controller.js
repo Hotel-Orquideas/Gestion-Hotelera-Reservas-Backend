@@ -47,10 +47,14 @@ const linkClientsWithBooking = async (req = request, res = response) => {
 				clientId: element.id,
 			},
 		});
-		res.json({
-			msg: 'clients linked with the bookings successfull!',
-		});
-		console.log(result);
+
+
+
+		//console.log(result);
+	});
+	
+	res.json({
+		msg: 'clients linked with the bookings successfull!',
 	});
 };
 

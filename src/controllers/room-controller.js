@@ -34,7 +34,22 @@ const getRoom = async (req = request, res = response) => {
 };
 
 const getAllRooms = async (req = request, res = response) => {
-	const results = await prisma.room.findMany({});
+	const results = await prisma.room.findMany({
+		select: {
+			id: true,
+			number: true,
+			state: true,
+			roomTypeId:true,
+			hotelId: true,
+			roomType: {
+				select: {
+					id: true,
+					name: true,
+					numMaxGuests: true
+				}
+			}
+		}
+	});
 	res.json(results);
 	console.log(results);
 };

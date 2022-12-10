@@ -33,7 +33,7 @@ const getRate = async (req = request, res = response) => {
 			value: true,
 			roomType: {
 				select: {
-					id: false,
+					id: true,
 					name: true,
 					numMaxGuests: true,
 				},
@@ -51,7 +51,7 @@ const getAllRates = async (req = request, res = response) => {
 			value: true,
 			roomType: {
 				select: {
-					id: false,
+					id: true,
 					name: true,
 					numMaxGuests: true,
 				},

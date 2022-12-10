@@ -33,7 +33,7 @@ const createBooking = async (req = request, res = response) => {
 					create: {
 						date: new Date(Date.now()).toISOString(),
 						total,
-						balanceDue:total,
+						balanceDue: total,
 						client: { connect: { id: parseInt(clientId) } },
 						hotel: { connect: { id: parseInt(hotelId) } },
 					},
@@ -88,7 +88,7 @@ const createBooking = async (req = request, res = response) => {
 					create: {
 						date: new Date(Date.now()).toISOString(),
 						total,
-						balanceDue,
+						balanceDue:total,
 						company: { connect: { id: parseInt(companyId) } },
 						hotel: { connect: { id: parseInt(hotelId) } },
 					},
@@ -141,22 +141,27 @@ const getAllBookings = async (req = request, res = response) => {
 		// 		},
 		// 	],
 		// },
-		select:{
-			company:{
-				select:{
-					id:true,
-					nit:true,
-					name:true
+		select: {
+			id:true,
+			checkInDate:true,
+			checkOutDate:true,
+			company: {
+				select: {
+					id: true,
+					nit: true,
+					name: true
 				}
 			},
-			client:{
-				select:{
-					id:true,
-					person:{
-						name:true,
-						lastName:true,
-						document:true,
-						phoneNumber:true
+			client: {
+				select: {
+					id: true,
+					person: {
+						select: {
+							name: true,
+							lastName: true,
+							document: true,
+							phoneNumber: true
+						}
 					}
 				}
 			}
@@ -237,8 +242,8 @@ const updateState = async (req = request, res = response) => {
 			where: {
 				id,
 			},
-			data:{
-				state:'B'
+			data: {
+				state: 'B'
 			}
 		});
 
@@ -246,13 +251,13 @@ const updateState = async (req = request, res = response) => {
 			msg: 'Booking updated sucessfull!',
 			result,
 		});
-	}else if (state === 'B'){
+	} else if (state === 'B') {
 		const result = await prisma.booking.update({
 			where: {
 				id,
 			},
-			data:{
-				state:'C'
+			data: {
+				state: 'C'
 			}
 		});
 
