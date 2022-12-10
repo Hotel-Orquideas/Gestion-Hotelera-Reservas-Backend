@@ -55,10 +55,10 @@ router.get(
 
 router.put('/completeInfo/:doc', completeInfoClient);
 
-router.put('/:doc', [validateJWT], updateClient);
+router.put('/:doc', updateClient);
 
-router.put('/changeState', chageStateClient);
+router.put('/changeState/:doc', chageStateClient);//por ahora sirve así -- mejorar la solución
 
-router.patch('/:doc', [validateJWT], deleteClient);
+router.patch('/:doc', deleteClient);
 
 module.exports = router;

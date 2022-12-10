@@ -9,7 +9,10 @@ const createRoomService = async (req = request, res = response) => {
 		data: {
 			quantity,
 			service: { connect: { id: parseInt(serviceId) } },
-			bookingRoom: { connect: { bookingId_roomId: parseInt(bookingRoomBookingId + '' + bookingRoomRoomId) } },
+			bookingRoom: { connect: { bookingId_roomId: {
+				bookingId:parseInt(bookingRoomBookingId),
+				roomId:parseInt(bookingRoomRoomId)
+			} } },
 		},
 	});
 	res.json({
@@ -33,6 +36,20 @@ const getAllRoomServices = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const results = await prisma.roomService.findMany({
 		where: { bookingRoomBookingId: id },
+		select:{
+			quantity:true,
+			bookingRoomBookingId:true,
+			bookingRoomRoomId:true,
+			serviceId:true,
+			service: {
+				select:{
+					id:true,
+					name:true,
+					pricePerUnit:true
+				}
+			},
+			
+		}
 	});
 	res.json(results);
 };

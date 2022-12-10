@@ -65,6 +65,7 @@ const getAllBookingsClients = async (req = request, res = response) => {
 		select: {
 			client: {
 				select: {
+					id:true,
 					cityOrigin: true,
 					cityDestination: true,
 					profession: true,

@@ -88,7 +88,7 @@ const createBooking = async (req = request, res = response) => {
 					create: {
 						date: new Date(Date.now()).toISOString(),
 						total,
-						balanceDue:total,
+						balanceDue: total,
 						company: { connect: { id: parseInt(companyId) } },
 						hotel: { connect: { id: parseInt(hotelId) } },
 					},
@@ -125,26 +125,85 @@ const getBooking = async (req = request, res = response) => {
 		where: {
 			id,
 		},
+		select: {
+			id: true,
+			checkInDate: true,
+			checkOutDate: true,
+			details:true,
+			state:true,
+			hotelId:true,
+			company: {
+				select: {
+					id: true,
+					nit: true,
+					name: true
+				}
+			},
+			client: {
+				select: {
+					id: true,
+					person: {
+						select: {
+							name: true,
+							lastName: true,
+							document: true,
+							phoneNumber: true
+						}
+					}
+				}
+			}
+		}
+
 	});
 	res.json(result);
 };
 
 const getAllBookings = async (req = request, res = response) => {
 	const results = await prisma.booking.findMany({
-		// where: {
-		// 	OR: [
-		// 		{
-		// 			state: 'A',
-		// 		},
-		// 		{
-		// 			state: 'B',
-		// 		},
-		// 	],
-		// },
+		where: {
+			state: 'A'
+		 },
 		select: {
-			id:true,
-			checkInDate:true,
-			checkOutDate:true,
+			id: true,
+			checkInDate: true,
+			checkOutDate: true,
+			state:true,
+			company: {
+				select: {
+					id: true,
+					nit: true,
+					name: true
+				}
+			},
+			client: {
+				select: {
+					id: true,
+					person: {
+						select: {
+							name: true,
+							lastName: true,
+							document: true,
+							phoneNumber: true
+						}
+					}
+				}
+			}
+		}
+	});
+	res.json(results);
+	console.log(results);
+};
+
+const getAllBookingsCheckIn = async (req = request, res = response) => {
+	const results = await prisma.booking.findMany({
+		where: {
+			state: 'B'
+		 },
+		select: {
+			id: true,
+			checkInDate: true,
+			checkOutDate: true,
+			state:true,
 			company: {
 				select: {
 					id: true,
@@ -285,6 +344,7 @@ module.exports = {
 	createBooking,
 	getBooking,
 	getAllBookings,
+	getAllBookingsCheckIn,
 	updateBooking,
 	updateState,
 	deleteBooking,

@@ -34,6 +34,19 @@ const getAllPaymentHistories = async (req = request, res = response) => {
 	const id = parseInt(req.params.id);
 	const results = await prisma.paymentHistory.findMany({
 		where: { billId: id },
+		select:{
+			id:true,
+			valueToPay:true,
+			dateOfPay:true,
+			paymentMethodId:true,
+			paymentMethod:{
+				select:{
+					id:true,
+					name:true
+				}
+			}
+
+		}
 	});
 	res.json(results);
 };
