@@ -6,7 +6,7 @@ const { env, config } = require('process');
 class Server {
 	constructor() {
 		this.app = express();
-		this.port = env.PORT;
+		this.port = process.env.PORT || "8080";
 		this.pathAuth = '/management/api/auth';
 		this.pathEmployee = '/management/api/employee';
 		this.pathCompanies = '/management/api/company';
