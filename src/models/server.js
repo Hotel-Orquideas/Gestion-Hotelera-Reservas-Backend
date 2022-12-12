@@ -1,10 +1,12 @@
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
+const { env, config } = require('process');
 
 class Server {
 	constructor() {
 		this.app = express();
-		this.port = 3005;
+		this.port = env.PORT;
 		this.pathAuth = '/management/api/auth';
 		this.pathEmployee = '/management/api/employee';
 		this.pathCompanies = '/management/api/company';
